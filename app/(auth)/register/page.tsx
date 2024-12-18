@@ -8,6 +8,7 @@ import { z } from "zod";
 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 const Register = () => {
   const [pending, startSubmiting] = useTransition();
@@ -25,10 +26,7 @@ const Register = () => {
 
   return (
     <article className=" w-[95%] max-w-[300px] p-5 rounded-md border">
-      <header>
-        <h2>Create Account</h2>
-        <p>useing stream</p>
-      </header>
+      <h2 className="font-bold font-Commissioner text-xl tracking-tight">Create Account</h2>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <FormField
@@ -36,7 +34,7 @@ const Register = () => {
             name="username"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-black/40">username</FormLabel>
+                <FormLabel className="text-black/40 text-[16px] font-Commissioner font-medium tracking-tight">username</FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
@@ -70,6 +68,7 @@ const Register = () => {
               </FormItem>
             )}
           />
+          <Button type="submit" className="mt-5 w-full">Create Account</Button>
         </form>
       </Form>
     </article>
