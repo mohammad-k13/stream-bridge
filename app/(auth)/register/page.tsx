@@ -9,9 +9,11 @@ import { z } from "zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useFormStatus } from "react-dom";
 
 const Register = () => {
   const [pending, startSubmiting] = useTransition();
+  // const [states, action] = useFormStatus();
 
   const form = useForm<z.infer<typeof registerFormSchema>>({
     resolver: zodResolver(registerFormSchema),
