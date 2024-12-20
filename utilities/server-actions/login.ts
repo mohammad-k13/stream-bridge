@@ -2,17 +2,16 @@
 
 import { IServerActionState } from "@/types";
 import { z } from "zod";
-import registerFormSchema from "../form-schema/register-form-schema";
+import loginFormSchema from "../form-schema/login-form-schema";
 
-export default async function RegisterAction(values: z.infer<typeof registerFormSchema>): Promise<IServerActionState> {
-    console.log(values);
-    const { success, data, error } = registerFormSchema.safeParse(values);
+export default async function LoginAction(values: z.infer<typeof loginFormSchema>): Promise<IServerActionState> {
+    const { success, data, error } = loginFormSchema.safeParse(values);
     if (!success) {
         return { isError: true, message: "Form Validation Faild" };
     }
 
     try {
-        const response = await fetch(`${process.env.API}/users`, {
+        const response = await fetch(`${process.env.API}/login`, {
             method: "POST",
             headers: {
                 "content-type": "application/json",
@@ -28,6 +27,10 @@ export default async function RegisterAction(values: z.infer<typeof registerForm
         return {
             isError: false,
             message,
+            payload: {
+                sessionToken,
+                expires,
+            },
         };
     } catch (err) {
         console.log(err);
