@@ -1,12 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Commissioner:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
+
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body{ 
-  font-family: "Commissioner";
-  font-display: "swan";
+  font-family: "Plus Jakarta Sans", serif;
 }
 
 :root {

@@ -44,12 +44,12 @@ const Register = () => {
     };
 
     return (
-        <article className="w-[300px] p-5 rounded-md bg-white shadow-lg">
-            <h2 className="font-bold font-Commissioner text-2xl tracking-tight text-center">Welcome back!</h2>
-            <p className="text-sm text-gray text-center my-2">We are excited to see you again</p>
+        <article className="max-md:w-[95%] w-[450px] p-5 rounded-md bg-white shadow-lg border-[1px] border-gray-secondary">
+            <h2 className="font-bold text-heading-1 text-center">Welcome back!</h2>
+            <p className="text-body text-gray text-center mb-5">We are excited to see you again</p>
             <div className="h-[1px] w-3/4 bg-gray opacity-25 rounded-md my-3 mx-auto"></div>
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="text-body">
                     <FormField
                         control={form.control}
                         name="username"

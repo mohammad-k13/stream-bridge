@@ -26,6 +26,15 @@ export default {
       borderRadius: {
         DEFAULT: "var(--radius)", // Default radius
       },
+      fontSize: {
+        "heading-1": "28px",
+        "heading-2": "24px",
+        "heading-3": "20px",
+        "heading-4": "18px",
+        "heading-5": "16px",
+        "body": "14px",
+        "caption": "12px"
+      },
     },
   },
   plugins: [],
