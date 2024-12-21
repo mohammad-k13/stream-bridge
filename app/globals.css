@@ -4,20 +4,24 @@
 @tailwind components;
 @tailwind utilities;
 
+body{ 
+  font-family: "Commissioner";
+  font-display: "swan";
+}
+
 :root {
-  --primary: #005FF9;
+  --primary: #FF5500;
   --secondary: #A5F469;
   --white: #FFFFFF;
-  --gray: #B0B0B0;
-  --black: #19191A;
+  --gray: #8F8F8F;
+  --black: #0D0B0C;
   --red: #DE5327;
-  --background: #F9FAFB;
+  --background: #F3F3F7;
   --gray-econdary: #EFF1F4;
-  --primary-overlay: #005FF910;
+  --primary-overlay: #FF550010;
   --black-overlay: #05104040;
   --white-overlay: #FFFFFF40;
   --red-econdoverlayary: #DE532710;
-  --radius: 0.75rem;
 }
 
 [data-theme='blue'] {

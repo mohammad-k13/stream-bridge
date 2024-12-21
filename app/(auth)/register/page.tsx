@@ -42,7 +42,7 @@ const Register = () => {
     };
 
     return (
-        <article className=" w-[95%] max-w-[300px] p-5 rounded-md border border-gray">
+        <article className="w-[300px] p-5 rounded-md bg-white shadow-lg">
             <h2 className="font-bold font-Commissioner text-2xl tracking-tight text-center">Create Account</h2>
             <p className="text-sm text-gray text-center my-2">Create Accound and enjoy to chat with friends</p>
             <div className="h-[1px] w-3/4 bg-gray opacity-25 rounded-md my-3 mx-auto"></div>
