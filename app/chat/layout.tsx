@@ -37,8 +37,9 @@ const ChatLayout = ({ children }: Props) => {
                         placeholder="Search messages"
                         className="focus-visible:border-none bg-gray-secondary rounded-md p-2 border-none"
                     />
-                    {chatList.map(({ lastMessage, online, profileUrl, username }) => (
+                    {chatList.map(({ lastMessage, online, profileUrl, username }, index) => (
                         <ChatBox
+                            key={index}
                             lastMessage={lastMessage}
                             online={online}
                             profileUrl={profileUrl}
