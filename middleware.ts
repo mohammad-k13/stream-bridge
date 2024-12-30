@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import sessionTokenValidation from "./lib/sessionTokenValidation";
 
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
@@ -8,10 +9,16 @@ export async function middleware(request: NextRequest) {
     const pathname = nextUrl.pathname;
 
     const sessionToken = (await cookies()).get("sessionToken")?.value;
+    const username = (await cookies()).get("username")?.value ?? "";
 
     if (pathname === "/chat") {
         if (!sessionToken) {
-            return NextResponse.redirect("/login");
+            return NextResponse.redirect(new URL("/login", nextUrl));
+        } else {
+            const sessionTokenValid = await sessionTokenValidation(username, sessionToken);
+            if (!sessionTokenValid) {
+                return NextResponse.redirect(new URL("/login", nextUrl));
+            }
         }
     }
 }
