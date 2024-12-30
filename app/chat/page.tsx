@@ -4,9 +4,9 @@ import useChatListStore from "@/store/chat/chat-list/useChatListStore";
 import Image from "next/image";
 import React from "react";
 
-const page = () => {
+const Page = () => {
     const { selectedChat } = useChatListStore();
-    if (!selectedChat) return <p>page</p>;
+    if (!selectedChat) return <p>Page</p>;
 
     return (
         <section className="w-full h-full">
@@ -23,4 +23,4 @@ const page = () => {
     );
 };
 
-export default page;
+export default Page;
