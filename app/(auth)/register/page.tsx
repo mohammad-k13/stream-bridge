@@ -15,9 +15,11 @@ import RegisterAction from "@/utilities/server-actions/register";
 import { toast } from "sonner";
 import Cookies from "js-cookie";
 import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const Register = () => {
     const [pending, startSubmiting] = useTransition();
+    const { push } = useRouter();
 
     const form = useForm<z.infer<typeof registerFormSchema>>({
         resolver: zodResolver(registerFormSchema),
@@ -31,13 +33,13 @@ const Register = () => {
     const onSubmit = (values: z.infer<typeof registerFormSchema>) => {
         startSubmiting(async () => {
             const { isError, message, payload } = await RegisterAction(values);
-            isError ? toast.error(message, {}) : toast.success(message);
-
-            // Cookies.set("sessionToken", payload.sessionToken, {
-            //     domain: process.env.DOMAIN_COOKIE,
-            //     expires: payload.expires,
-            //     secure: process.env.NODE_ENV === "production",
-            // });
+            if (isError) {
+                toast.error(message, {});
+            } else {
+                toast.success(message);
+                push("/chat");
+                form.reset();
+            }
         });
     };
 

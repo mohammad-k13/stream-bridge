@@ -40,6 +40,13 @@ const Register = () => {
                 expires: new Date(payload.expires),
                 secure: process.env.NODE_ENV === "production",
             });
+            Cookies.set("username", form.getValues().username, {
+                domain: process.env.DOMAIN_COOKIE,
+                expires: new Date(payload.expires),
+                secure: process.env.NODE_ENV === "production",
+            });
+
+            form.reset();
         });
     };
 
