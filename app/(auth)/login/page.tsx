@@ -14,9 +14,11 @@ import Cookies from "js-cookie";
 import { Loader2 } from "lucide-react";
 import loginFormSchema from "@/utilities/form-schema/login-form-schema";
 import LoginAction from "@/utilities/server-actions/login";
+import { useRouter } from "next/navigation";
 
 const Register = () => {
     const [pending, startSubmiting] = useTransition();
+    const { push } = useRouter();
 
     const form = useForm<z.infer<typeof loginFormSchema>>({
         resolver: zodResolver(loginFormSchema),
@@ -40,6 +42,14 @@ const Register = () => {
                 expires: new Date(payload.expires),
                 secure: process.env.NODE_ENV === "production",
             });
+            Cookies.set("username", form.getValues().username, {
+                domain: process.env.DOMAIN_COOKIE,
+                expires: new Date(payload.expires),
+                secure: process.env.NODE_ENV === "production",
+            });
+
+            push("/chat");
+            form.reset();
         });
     };
 

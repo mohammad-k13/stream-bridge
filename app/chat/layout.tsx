@@ -14,7 +14,7 @@ const ChatLayout = ({ children }: Props) => {
     return (
         <section className="w-full h-screen overflow-hidden flex">
             <aside className="w-1/4 h-full relative border-r-[1px] border-gray-secondary">
-                <header className="w-full p-2 px-4  border-b-[1px] border-gray-secondary flex items-center justify-between">
+                <header className="w-full p-2 px-4 h-14 border-b-[1px] border-gray-secondary flex items-center justify-between">
                     <div className="flex items-start gap-3">
                         <Image
                             src={"https://avatars.githubusercontent.com/u/88265699?v=4"}
