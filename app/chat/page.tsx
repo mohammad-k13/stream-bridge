@@ -1,8 +1,10 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import useChatListStore from "@/store/chat/chat-list/useChatListStore";
 import Image from "next/image";
 import React from "react";
+import Cookies from 'js-cookie'
 
 const Page = () => {
     const { selectedChat } = useChatListStore();
