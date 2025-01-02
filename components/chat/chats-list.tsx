@@ -1,12 +1,21 @@
+"use client";
+
 import Image from "next/image";
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "../ui/button";
 import { MoreVertical } from "lucide-react";
 import { Input } from "../ui/input";
 import { chatList } from "@/constant";
 import ChatBox from "../ui/chat/chat-box";
+import useChatListStore from "@/store/chat/chat-list/useChatListStore";
 
 const ChatsList = () => {
+    const { getChats } = useChatListStore();
+
+    useEffect(() => {
+        getChats();
+    }, []);
+
     return (
         <>
             <div className="w-full p-2 px-4 h-14 border-b-[1px] border-gray-secondary flex items-center justify-between">

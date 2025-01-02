@@ -8,26 +8,26 @@ import { Input } from "@/components/ui/input";
 import { Send, Smile } from "lucide-react";
 import { io } from "socket.io-client";
 
-const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL);
+// const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL);
 
 const Page = ({params}: {params: {chatId: string}}) => {
     const { selectedChat } = useChatListStore();
 
-    useEffect(() => {
-        socket.on("connect", () => {
-            console.log("Connected to socket server");
-        });
+//     useEffect(() => {
+//         socket.on("connect", () => {
+//             console.log("Connected to socket server");
+//         });
 
-        socket.on("connect_error", (error) => {
-            console.error("Connection error:", error);
-        });
+//         socket.on("connect_error", (error) => {
+//             console.error("Connection error:", error);
+//         });
 
-        // Clean up the listener when the component unmounts
-        return () => {
-            socket.off("connect");
-            socket.off("connect_error");
-        };
-    }, []);
+//         // Clean up the listener when the component unmounts
+//         return () => {
+//             socket.off("connect");
+//             socket.off("connect_error");
+//         };
+//     }, []);
 
     if (!selectedChat) return <p>Page</p>;
     return (

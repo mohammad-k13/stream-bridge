@@ -15,10 +15,12 @@ import { Loader2 } from "lucide-react";
 import loginFormSchema from "@/utilities/form-schema/login-form-schema";
 import LoginAction from "@/utilities/server-actions/login";
 import { useRouter } from "next/navigation";
+import useToken from "@/store/auth/useToken";
 
 const Register = () => {
     const [pending, startSubmiting] = useTransition();
     const { push } = useRouter();
+    const { setToken } = useToken();
 
     const form = useForm<z.infer<typeof loginFormSchema>>({
         resolver: zodResolver(loginFormSchema),
