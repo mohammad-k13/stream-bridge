@@ -48,7 +48,7 @@ const Register = () => {
                 secure: process.env.NODE_ENV === "production",
             });
 
-            push("/chat");
+            push(`/${form.getValues().username}`);
             form.reset();
         });
     };

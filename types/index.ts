@@ -1,3 +1,5 @@
+import { ReactNode } from "react"
+
 export interface IServerActionState {
       isError: boolean,
       message: string,
@@ -9,4 +11,8 @@ export interface IChat {
       profileUrl: string,
       online: boolean,
       lastMessage: string | null
+}
+
+export interface Props {
+      children: ReactNode;
 }

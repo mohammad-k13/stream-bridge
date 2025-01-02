@@ -1,18 +1,16 @@
-import { Button } from "@/components/ui/button";
-import ChatBox from "@/components/ui/chat/chat-box";
-import { Input } from "@/components/ui/input";
-import { chatList } from "@/constant";
-import { MoreHorizontal, MoreVertical } from "lucide-react";
+"use client";
+
 import Image from "next/image";
-import React, { ReactNode } from "react";
+import React from "react";
+import { Button } from "../ui/button";
+import { MoreVertical } from "lucide-react";
+import { Input } from "../ui/input";
+import { chatList } from "@/constant";
+import ChatBox from "../ui/chat/chat-box";
 
-type Props = {
-    children: ReactNode;
-};
-
-const ChatLayout = ({ children }: Props) => {
+const ChatDashboard = () => {
     return (
-        <section className="w-full h-screen overflow-hidden flex">
+        <section className="w-full h-full flex">
             <aside className="w-1/4 h-full relative border-r-[1px] border-gray-secondary">
                 <header className="w-full p-2 px-4 h-14 border-b-[1px] border-gray-secondary flex items-center justify-between">
                     <div className="flex items-start gap-3">
@@ -48,9 +46,9 @@ const ChatLayout = ({ children }: Props) => {
                     ))}
                 </main>
             </aside>
-            <main className="w-3/4 h-full">{children}</main>
+            <main className="w-3/4 h-full">{}</main>
         </section>
     );
 };
 
-export default ChatLayout;
+export default ChatDashboard;
