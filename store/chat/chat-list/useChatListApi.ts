@@ -1,4 +1,5 @@
 import { axiosClient } from "@/lib/axios";
+import useCurrentUserInfo from "@/store/user/current-user-info";
 import { IChat } from "@/types";
 import { create } from "zustand";
 
@@ -13,7 +14,7 @@ const useChatListApi = create<IUseChatListApi>((set, get) => ({
     chatListLoading: false,
     getChats: async () => {
       set({chatListLoading: true})
-        const { data, status } = await axiosClient<IChat[]>("/users");
+        const { data, status } = await axiosClient<IChat[]>("/chats");
         set({ chatList: data, chatListLoading: false});
     },
 }));

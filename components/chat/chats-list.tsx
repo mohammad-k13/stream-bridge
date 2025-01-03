@@ -9,29 +9,41 @@ import ChatBox from "../ui/chat/chat-box";
 import useChatListStore from "@/store/chat/chat-list/useChatListStore";
 import useChatListApi from "@/store/chat/chat-list/useChatListApi";
 import ChatboSkeletone from "../skeletons/chatbox-skeletone";
+import useCurrentUserInfo from "@/store/user/current-user-info";
+import { Skeleton } from "../ui/skeleton";
 
 const ChatsList = () => {
     const { getChats, chatListLoading, chatList } = useChatListApi();
+    const { getThisUserInfo, userInfo } = useCurrentUserInfo();
 
     useEffect(() => {
+        getThisUserInfo();
         getChats();
     }, []);
 
     return (
         <>
             <div className="w-full p-2 px-4 h-14 border-b-[1px] border-gray-secondary flex items-center justify-between">
-                <div className="flex items-start gap-3">
-                    <Image
-                        src="https://avatars.githubusercontent.com/u/88265699?v=4"
-                        alt="Mohammad-profile"
-                        width={44}
-                        height={44}
-                        className="object-cover rounded-lg"
-                    />
-                    <div>
-                        <h5 className="text-body font-bold">Mohammad</h5>
-                        <p className="text-caption font-semibold text-gray">mohammad-k13</p>
-                    </div>
+                <div className="w-full flex items-start gap-3">
+                    {!userInfo ? (
+                        <div className="grow mr-3">
+                            <ChatboSkeletone isCurrentUser />
+                        </div>
+                    ) : (
+                        <>
+                            <Image
+                                src={userInfo!.image}
+                                alt="Mohammad-profile"
+                                width={44}
+                                height={44}
+                                className="object-cover rounded-lg"
+                            />{" "}
+                            <div>
+                                <h5 className="text-body font-bold">{userInfo?.username}</h5>
+                                <p className="text-caption font-semibold text-gray">{userInfo?.email}</p>
+                            </div>
+                        </>
+                    )}
                 </div>
                 <Button size="icon" className="bg-red-overlay shadow-none text-red">
                     <MoreVertical />
