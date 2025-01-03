@@ -48,8 +48,7 @@ const Page = ({ params }: { params: { chatId: string } }) => {
             const {
                 data: { isMatch },
             } = await axiosClient.post("/matchUserIdWithToken", { userId: recieverId });
-            console.log("isMatch", isMatch);
-            if (!isMatch) {
+            if (isMatch && selectedChat?._id === senderId) {
                 setMessages((prev) => [...prev, { text: message, recieverId, senderId }]);
             }
         });
@@ -59,7 +58,6 @@ const Page = ({ params }: { params: { chatId: string } }) => {
             socket.off("connect_error");
         };
     }, []);
-
 
     if (!selectedChat) return <p>Page</p>;
     return (
