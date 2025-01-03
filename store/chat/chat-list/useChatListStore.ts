@@ -1,3 +1,5 @@
+import { getCookie } from "@/lib/cookies";
+import useToken from "@/store/auth/useToken";
 import { IChat } from "@/types";
 import { create } from "zustand";
 

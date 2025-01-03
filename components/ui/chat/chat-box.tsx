@@ -6,18 +6,22 @@ import React from "react";
 import { Badge } from "../badge";
 import clsx from "clsx";
 import useChatListStore from "@/store/chat/chat-list/useChatListStore";
+import { redirect, usePathname, useRouter } from "next/navigation";
 
 interface Props extends IChat {
     timestamp?: string;
 }
 
-const ChatBox = ({ lastMessage, online, profileUrl, username, timestamp = "12m" }: Props) => {
+const ChatBox = ({ _id, image, username, timestamp = "12m" }: Props) => {
     const { selectedChat, setSelectedChat } = useChatListStore();
     const isSelectedChat = selectedChat?.username === username;
+    const pathname = usePathname().split("/")[2];
+
 
     const handleClick = () => {
-        const chat = { lastMessage, online, profileUrl, username };
+        const chat = { _id, image, username };
         setSelectedChat(chat);
+        redirect(`/chat/${pathname}/${_id}`)
     };
 
     return (
@@ -33,7 +37,7 @@ const ChatBox = ({ lastMessage, online, profileUrl, username, timestamp = "12m" 
         >
             <header className="flex items-center">
                 <Image
-                    src={profileUrl || "/fallback-image.png"}
+                    src={image || "/fallback-image.png"}
                     alt={`${username}-profile`}
                     width={48}
                     height={48}
@@ -45,7 +49,7 @@ const ChatBox = ({ lastMessage, online, profileUrl, username, timestamp = "12m" 
                     <h5 className="font-semibold text-body">{username}</h5>
                     <p className="font-semibold text-caption text-gray">{timestamp}</p>
                 </div>
-                <p className="text-gray text-caption">{lastMessage}</p>
+                <p className="text-gray text-caption">{"what's up"}</p>
             </main>
         </article>
     );

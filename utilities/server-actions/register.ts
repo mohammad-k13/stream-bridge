@@ -12,7 +12,7 @@ export default async function RegisterAction(values: z.infer<typeof registerForm
     }
 
     try {
-        const response = await fetch(`${process.env.API}/users`, {
+        const response = await fetch(`${process.env.API}/register`, {
             method: "POST",
             headers: {
                 "content-type": "application/json",

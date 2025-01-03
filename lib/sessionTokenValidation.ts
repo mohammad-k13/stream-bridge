@@ -1,4 +1,4 @@
-import { axiosInstance } from "./axios";
+import { axiosServer } from "./axios";
 
 /**
  * Validates the session token.
@@ -8,7 +8,7 @@ import { axiosInstance } from "./axios";
  */
 export default async function sessionTokenValidation(username: string, sessionToken: string): Promise<boolean> {
     try {
-        const { status } = await axiosInstance.post("/validation-session", { username, sessionToken });
+        const { status } = await axiosServer.post("/validation-session", { username, sessionToken });
         return status === 200 ? true : false;
     } catch (err) {
       console.log("sessionTokenValidation Error", err)
