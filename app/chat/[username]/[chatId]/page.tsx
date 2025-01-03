@@ -18,7 +18,7 @@ const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL, {
     },
 });
 
-const Page = ({ params }: { params: { chatId: string } }) => {
+const Page = () => {
     const { selectedChat } = useChatListStore();
     const [messages, setMessages] = useState<IMessage[]>([]);
     const [newMessage, setNewMessage] = useState<string | null>(null);
