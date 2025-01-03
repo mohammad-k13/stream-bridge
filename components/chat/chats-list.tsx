@@ -33,7 +33,7 @@ const ChatsList = () => {
                         <p className="text-caption font-semibold text-gray">mohammad-k13</p>
                     </div>
                 </div>
-                <Button size="icon">
+                <Button size="icon" className="bg-red-overlay shadow-none text-red">
                     <MoreVertical />
                 </Button>
             </div>
@@ -44,14 +44,8 @@ const ChatsList = () => {
                 />
                 {chatListLoading && Array.from({ length: 5 }).map((_, index) => <ChatboSkeletone key={index} />)}
                 {!chatListLoading &&
-                    chatList.map(({ image, username }, index) => (
-                        <ChatBox
-                            key={index}
-                            // lastMessage={lastMessage}
-                            // online={online}
-                            image={image}
-                            username={username}
-                        />
+                    chatList.map(({ _id, image, username }, index) => (
+                        <ChatBox key={_id} _id={_id} image={image} username={username} />
                     ))}
             </div>
         </>

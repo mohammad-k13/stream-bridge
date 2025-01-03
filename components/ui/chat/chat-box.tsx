@@ -6,20 +6,22 @@ import React from "react";
 import { Badge } from "../badge";
 import clsx from "clsx";
 import useChatListStore from "@/store/chat/chat-list/useChatListStore";
+import { redirect, usePathname, useRouter } from "next/navigation";
 
 interface Props extends IChat {
     timestamp?: string;
 }
 
-const ChatBox = ({ image, username, timestamp = "12m" }: Props) => {
+const ChatBox = ({ _id, image, username, timestamp = "12m" }: Props) => {
     const { selectedChat, setSelectedChat } = useChatListStore();
     const isSelectedChat = selectedChat?.username === username;
+    const pathname = usePathname().split("/")[2];
 
-    console.log(image);
 
     const handleClick = () => {
-        const chat = { image, username };
+        const chat = { _id, image, username };
         setSelectedChat(chat);
+        redirect(`/chat/${pathname}/${_id}`)
     };
 
     return (
