@@ -5,15 +5,16 @@ import React, { useEffect } from "react";
 import { Button } from "../ui/button";
 import { MoreVertical } from "lucide-react";
 import { Input } from "../ui/input";
-import { chatList } from "@/constant";
 import ChatBox from "../ui/chat/chat-box";
 import useChatListStore from "@/store/chat/chat-list/useChatListStore";
+import useChatListApi from "@/store/chat/chat-list/useChatListApi";
 
 const ChatsList = () => {
-    const { getChats } = useChatListStore();
+    const { getChats, chatList } = useChatListApi();
 
     useEffect(() => {
         getChats();
+        console.log(chatList);
     }, []);
 
     return (
@@ -41,12 +42,12 @@ const ChatsList = () => {
                     placeholder="Search messages"
                     className="focus-visible:border-none bg-gray-secondary rounded-md p-2 border-none"
                 />
-                {chatList.map(({ lastMessage, online, profileUrl, username }, index) => (
+                {chatList.map(({ image, username }, index) => (
                     <ChatBox
                         key={index}
-                        lastMessage={lastMessage}
-                        online={online}
-                        profileUrl={profileUrl}
+                        // lastMessage={lastMessage}
+                        // online={online}
+                        image={image}
                         username={username}
                     />
                 ))}

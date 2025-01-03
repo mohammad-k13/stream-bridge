@@ -11,12 +11,14 @@ interface Props extends IChat {
     timestamp?: string;
 }
 
-const ChatBox = ({ lastMessage, online, profileUrl, username, timestamp = "12m" }: Props) => {
+const ChatBox = ({ image, username, timestamp = "12m" }: Props) => {
     const { selectedChat, setSelectedChat } = useChatListStore();
     const isSelectedChat = selectedChat?.username === username;
 
+    console.log(image);
+
     const handleClick = () => {
-        const chat = { lastMessage, online, profileUrl, username };
+        const chat = { image, username };
         setSelectedChat(chat);
     };
 
@@ -33,7 +35,7 @@ const ChatBox = ({ lastMessage, online, profileUrl, username, timestamp = "12m" 
         >
             <header className="flex items-center">
                 <Image
-                    src={profileUrl || "/fallback-image.png"}
+                    src={image || "/fallback-image.png"}
                     alt={`${username}-profile`}
                     width={48}
                     height={48}
@@ -45,7 +47,7 @@ const ChatBox = ({ lastMessage, online, profileUrl, username, timestamp = "12m" 
                     <h5 className="font-semibold text-body">{username}</h5>
                     <p className="font-semibold text-caption text-gray">{timestamp}</p>
                 </div>
-                <p className="text-gray text-caption">{lastMessage}</p>
+                <p className="text-gray text-caption">{"what's up"}</p>
             </main>
         </article>
     );

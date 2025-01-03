@@ -8,9 +8,8 @@ export interface IServerActionState {
 
 export interface IChat {
       username: string,
-      profileUrl: string,
-      online: boolean,
-      lastMessage: string | null
+      image: string,
+      
 }
 
 export interface Props {

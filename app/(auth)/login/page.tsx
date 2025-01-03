@@ -16,6 +16,7 @@ import loginFormSchema from "@/utilities/form-schema/login-form-schema";
 import LoginAction from "@/utilities/server-actions/login";
 import { useRouter } from "next/navigation";
 import useToken from "@/store/auth/useToken";
+import { setCookie } from "@/lib/cookies";
 
 const Register = () => {
     const [pending, startSubmiting] = useTransition();
@@ -37,20 +38,16 @@ const Register = () => {
                 toast.error(message, {});
                 return;
             }
-            toast.success(message);
 
-            Cookies.set("sessionToken", payload.sessionToken, {
+            const cookiePayload = {
                 domain: process.env.DOMAIN_COOKIE,
                 expires: new Date(payload.expires),
                 secure: process.env.NODE_ENV === "production",
-            });
-            Cookies.set("username", form.getValues().username, {
-                domain: process.env.DOMAIN_COOKIE,
-                expires: new Date(payload.expires),
-                secure: process.env.NODE_ENV === "production",
-            });
+            };
 
-            push(`/${form.getValues().username}`);
+            setCookie("sessionToken", payload.sessionToken, cookiePayload);
+
+            push(`/chat/${form.getValues().username}`);
             form.reset();
         });
     };

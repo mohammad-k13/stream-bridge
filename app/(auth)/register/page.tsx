@@ -37,7 +37,7 @@ const Register = () => {
                 toast.error(message, {});
             } else {
                 toast.success(message);
-                push("/chat");
+                push("/login");
                 form.reset();
             }
         });
