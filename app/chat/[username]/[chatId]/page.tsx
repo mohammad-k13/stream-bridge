@@ -18,6 +18,10 @@ const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL, {
     },
 });
 
+//todo: add another types to message like author or type
+//todo: add message type base on sending or recieveing
+//todo: type: "send" or "recieve"
+
 const Page = () => {
     const { selectedChat } = useChatListStore();
     const [messages, setMessages] = useState<IMessage[]>([]);
