@@ -12,24 +12,29 @@ import { IMessage } from "@/types";
 import { redirect } from "next/dist/server/api-utils";
 import { axiosClient } from "@/lib/axios";
 import clsx from "clsx";
+import Message from "@/components/chat/message";
 
 const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL, {
     auth: {
         token: getCookie("sessionToken")?.toString(),
     },
 });
- 
+
 const Page = () => {
     const { selectedChat } = useChatListStore();
     const [messages, setMessages] = useState<IMessage[]>([]);
     const [newMessage, setNewMessage] = useState<string>("");
 
     const sendMessage = () => {
-        socket.emit("send-message", { message: newMessage, recieverId: selectedChat!._id }, (text: string) => {
-            const message: IMessage = { text, type: "out_box" };
-            setMessages((pv) => [...pv, message]);
-            setNewMessage("");
-        });
+        socket.emit(
+            "send-message",
+            { message: newMessage, recieverId: selectedChat!._id },
+            (text: string, id: string) => {
+                const message: IMessage = { text, type: "out_box", id };
+                setMessages((pv) => [...pv, message]);
+                setNewMessage("");
+            }
+        );
     };
 
     const inputOnChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
@@ -41,8 +46,8 @@ const Page = () => {
             console.log("Connected to socket server");
         });
 
-        socket.on("recive-message", async ({ message, recieverId, senderId }) => {
-            setMessages((prev) => [...prev, { text: message, type: "in_box" }]);
+        socket.on("recive-message", async ({ message, id }) => {
+            setMessages((prev) => [...prev, { id, text: message, type: "in_box" }]);
         });
 
         return () => {
@@ -73,17 +78,9 @@ const Page = () => {
                     </Button>
                 </div>
             </header>
-            <main className="h-full w-full">
+            <main className="h-full w-full p-2">
                 {messages.map(({ text, type }, index) => (
-                    <div
-                        key={index}
-                        className={clsx(" flex items-center gap-3 text-sm text-gray", {
-                            "text-rose-500": type === "in_box",
-                            "text-green-500": type === "out_box",
-                        })}
-                    >
-                        <p>{text}</p>
-                    </div>
+                    <Message key={index} text={text} type={type} />
                 ))}
             </main>
             <footer className="lg:w-2/3 w-full h-fit bg-white absolute z-30 left-1/2 -translate-x-1/2 bottom-0 rounded-lg">

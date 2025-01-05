@@ -17,6 +17,7 @@ export interface Props {
 }
 
 export interface IMessage {
+    id: string,
     type: "in_box" | "out_box";
     text: string;
 }
