@@ -11,31 +11,25 @@ import { getCookie } from "@/lib/cookies";
 import { IMessage } from "@/types";
 import { redirect } from "next/dist/server/api-utils";
 import { axiosClient } from "@/lib/axios";
+import clsx from "clsx";
 
 const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL, {
     auth: {
         token: getCookie("sessionToken")?.toString(),
     },
 });
-
-//todo: add another types to message like author or type
-//todo: add message type base on sending or recieveing
-//todo: type: "send" or "recieve"
-
+ 
 const Page = () => {
     const { selectedChat } = useChatListStore();
     const [messages, setMessages] = useState<IMessage[]>([]);
-    const [newMessage, setNewMessage] = useState<string | null>(null);
+    const [newMessage, setNewMessage] = useState<string>("");
 
     const sendMessage = () => {
-        socket.emit(
-            "send-message",
-            { message: newMessage, recieverId: selectedChat!._id },
-            (text: string, senderId: string) => {
-                const message: IMessage = { recieverId: selectedChat!._id, senderId, text };
-                setMessages((pv) => [...pv, message]);
-            }
-        );
+        socket.emit("send-message", { message: newMessage, recieverId: selectedChat!._id }, (text: string) => {
+            const message: IMessage = { text, type: "out_box" };
+            setMessages((pv) => [...pv, message]);
+            setNewMessage("");
+        });
     };
 
     const inputOnChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
@@ -47,14 +41,8 @@ const Page = () => {
             console.log("Connected to socket server");
         });
 
-        socket.emit("assign-user");
         socket.on("recive-message", async ({ message, recieverId, senderId }) => {
-            const {
-                data: { isMatch },
-            } = await axiosClient.post("/matchUserIdWithToken", { userId: recieverId });
-            if (isMatch && selectedChat?._id === senderId) {
-                setMessages((prev) => [...prev, { text: message, recieverId, senderId }]);
-            }
+            setMessages((prev) => [...prev, { text: message, type: "in_box" }]);
         });
 
         return () => {
@@ -62,6 +50,10 @@ const Page = () => {
             socket.off("connect_error");
         };
     }, []);
+
+    useEffect(() => {
+        console.log(messages);
+    }, [messages.length]);
 
     if (!selectedChat) return <p>Page</p>;
     return (
@@ -82,11 +74,15 @@ const Page = () => {
                 </div>
             </header>
             <main className="h-full w-full">
-                {messages.map(({ text, recieverId, senderId }, index) => (
-                    <div key={index} className="flex items-center gap-3 text-sm text-gray">
+                {messages.map(({ text, type }, index) => (
+                    <div
+                        key={index}
+                        className={clsx(" flex items-center gap-3 text-sm text-gray", {
+                            "text-rose-500": type === "in_box",
+                            "text-green-500": type === "out_box",
+                        })}
+                    >
                         <p>{text}</p>
-                        <p>senderId: {senderId}</p>
-                        <p>recieverId: {recieverId}</p>
                     </div>
                 ))}
             </main>
@@ -95,6 +91,7 @@ const Page = () => {
                     <Input
                         placeholder="Type a message"
                         className="py-2 border-gray-secondary"
+                        value={newMessage}
                         onChange={inputOnChangeHandler}
                     />
                     <Button size={"icon"} onClick={sendMessage}>

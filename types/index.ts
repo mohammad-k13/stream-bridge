@@ -17,13 +17,12 @@ export interface Props {
 }
 
 export interface IMessage {
-    senderId: string;
-    recieverId: string;
+    type: "in_box" | "out_box";
     text: string;
 }
 
 export interface IUser {
-    username: string,
-    email: string,
-    image: string,
+    username: string;
+    email: string;
+    image: string;
 }
