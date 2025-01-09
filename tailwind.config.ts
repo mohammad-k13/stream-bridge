@@ -1,7 +1,12 @@
+import { theme } from "antd";
 import type { Config } from "tailwindcss";
+const defaultTheme = require("tailwindcss/defaultTheme");
+const colors = require("tailwindcss/colors");
+const {
+  default: flattenColorPalette,
+} = require("tailwindcss/lib/util/flattenColorPalette");
 
-export default {
-  darkMode: ["class", "[data-theme='dark']"],
+const config: Config = {
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -10,32 +15,24 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: "var(--primary)",
-        secondary: "var(--secondary)",
-        white: "var(--white)",
-        gray: "var(--gray)",
-        black: "var(--black)",
-        red: "var(--red)",
         background: "var(--background)",
-        "gray-secondary": "var(--gray-econdary)",
-        "primary-overlay": "var(--primary-overlay)",
-        "black-overlay": "var(--black-overlay)",
-        "white-overlay": "var(--white-overlay)",
-        "red-overlay": "var(--red-econdoverlayary)",
-      },
-      borderRadius: {
-        DEFAULT: "var(--radius)", // Default radius
-      },
-      fontSize: {
-        "heading-1": "28px",
-        "heading-2": "24px",
-        "heading-3": "20px",
-        "heading-4": "18px",
-        "heading-5": "16px",
-        "body": "14px",
-        "caption": "12px"
+        foreground: "var(--foreground)",
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
-} satisfies Config;
+  plugins: [addVariablesForColors],
+};
+
+// This plugin adds each Tailwind color as a global CSS variable, e.g. var(--gray-200).
+function addVariablesForColors({ addBase, theme }: any) {
+  let allColors = flattenColorPalette(theme("colors"));
+  let newVars = Object.fromEntries(
+    Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
+  );
+
+  addBase({
+    ":root": newVars,
+  });
+}
+
+export default config;

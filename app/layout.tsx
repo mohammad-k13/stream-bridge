@@ -1,30 +1,16 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import { ThemeProvider } from "@/providers/theme-contenxt";
-import {Toaster} from "sonner"
+import React from "react";
+import { AntdRegistry } from "@ant-design/nextjs-registry";
+import "@ant-design/v5-patch-for-react-19";
+import ThemeProvider from "@/providers/theme-provider";
 
-export const metadata: Metadata = {
-    title: "Stream Bridge",
-    description: "A plartform for make life easier",
-    icons: {
-        icon: {
-            url: "/logo.png"
-        }
-    }
-};
-
-export default function RootLayout({
-    children,
-}: Readonly<{
-    children: React.ReactNode;
-}>) {
-    return (
-        <html lang="en">
-            <body>
+const RootLayout = ({ children }: React.PropsWithChildren) => (
+    <html lang="en">
+        <body style={{ padding: 0, margin: 0, boxSizing: "border-box"}}>
+            <AntdRegistry>
                 <ThemeProvider>{children}</ThemeProvider>
-                <Toaster closeButton richColors/>
-            </body>
-        </html>
-    );
-}
+            </AntdRegistry>
+        </body>
+    </html>
+);
+
+export default RootLayout;
