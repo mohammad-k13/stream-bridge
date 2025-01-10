@@ -31,11 +31,11 @@ import useFriendRequest from "@/store/chat/useFriendRequest";
 import { Badge } from "../ui/badge";
 
 const ChatsList = () => {
+    const { getFriendRequest, newFriendRequest } = useFriendRequest();
     const { getChats, chatListLoading, chatList } = useChatListApi();
     const { getThisUserInfo, userInfo } = useCurrentUserInfo();
-    const { getFriendRequest, newFriendRequest } = useFriendRequest();
+    const { toggleFriendDialog, toggleShowRequest } = useDialogs();
     const { logout } = useAuth();
-    const { toggleFriendDialog } = useDialogs();
 
     useEffect(() => {
         getThisUserInfo();
@@ -73,7 +73,9 @@ const ChatsList = () => {
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button size="icon" className="bg-primary-overlay shadow-none text-primary relative">
-                            {newFriendRequest.length > 0 && <div className="size-[5px] rounded-full absolute top-[-2px] right-[-2px] bg-red"></div>}
+                            {newFriendRequest.length > 0 && (
+                                <div className="size-[5px] rounded-full absolute top-[-2px] right-[-2px] bg-red"></div>
+                            )}
 
                             <MoreVertical />
                         </Button>
@@ -85,7 +87,10 @@ const ChatsList = () => {
                             <DropdownMenuItem className="hover:bg-gray-secondary cursor-pointer transition-colors">
                                 Notifications
                             </DropdownMenuItem>
-                            <DropdownMenuItem className="hover:bg-gray-secondary cursor-pointer transition-colors flex items-center justify-between">
+                            <DropdownMenuItem
+                                className="hover:bg-gray-secondary cursor-pointer transition-colors flex items-center justify-between"
+                                onClick={toggleShowRequest}
+                            >
                                 Requests
                                 {newFriendRequest.length > 0 && (
                                     <Badge className="text-white bg-red">{newFriendRequest.length}</Badge>

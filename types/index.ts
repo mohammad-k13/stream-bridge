@@ -31,6 +31,7 @@ export interface IUser {
 export interface IFriendRequest {
     _id: string;
     status: "pending" | "accepted" | "rejected";
+    createdAt: Date,
     senderInfo: {
         username: string;
         image: string;
