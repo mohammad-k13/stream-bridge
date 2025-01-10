@@ -17,7 +17,7 @@ export interface Props {
 }
 
 export interface IMessage {
-    id: string,
+    id: string;
     type: "in_box" | "out_box";
     text: string;
 }
@@ -26,4 +26,13 @@ export interface IUser {
     username: string;
     email: string;
     image: string;
+}
+
+export interface IFriendRequest {
+    _id: string;
+    status: "pending" | "accepted" | "rejected";
+    senderInfo: {
+        username: string;
+        image: string;
+    };
 }

@@ -27,16 +27,20 @@ import {
 } from "@/components/ui/dropdown-menu";
 import useAuth from "@/store/auth/useAuth";
 import useDialogs from "@/store/dialogs/useDialogs";
+import useFriendRequest from "@/store/chat/useFriendRequest";
+import { Badge } from "../ui/badge";
 
 const ChatsList = () => {
     const { getChats, chatListLoading, chatList } = useChatListApi();
     const { getThisUserInfo, userInfo } = useCurrentUserInfo();
+    const { getFriendRequest, newFriendRequest } = useFriendRequest();
     const { logout } = useAuth();
     const { toggleFriendDialog } = useDialogs();
 
     useEffect(() => {
         getThisUserInfo();
         getChats();
+        getFriendRequest();
     }, []);
 
     return (
@@ -63,12 +67,14 @@ const ChatsList = () => {
                         </>
                     )}
                 </div>
-                <Button size="icon" className="bg-primary shadow-none text-white" onClick={toggleFriendDialog}>
+                <Button size="icon" className="bg-primary shadow-none text-white relative" onClick={toggleFriendDialog}>
                     <Plus />
                 </Button>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button size="icon" className="bg-primary-overlay shadow-none text-primary">
+                        <Button size="icon" className="bg-primary-overlay shadow-none text-primary relative">
+                            {newFriendRequest.length > 0 && <div className="size-[5px] rounded-full absolute top-[-2px] right-[-2px] bg-red"></div>}
+
                             <MoreVertical />
                         </Button>
                     </DropdownMenuTrigger>
@@ -79,8 +85,11 @@ const ChatsList = () => {
                             <DropdownMenuItem className="hover:bg-gray-secondary cursor-pointer transition-colors">
                                 Notifications
                             </DropdownMenuItem>
-                            <DropdownMenuItem className="hover:bg-gray-secondary cursor-pointer transition-colors">
+                            <DropdownMenuItem className="hover:bg-gray-secondary cursor-pointer transition-colors flex items-center justify-between">
                                 Requests
+                                {newFriendRequest.length > 0 && (
+                                    <Badge className="text-white bg-red">{newFriendRequest.length}</Badge>
+                                )}
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
