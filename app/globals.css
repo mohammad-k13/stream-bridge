@@ -10,15 +10,15 @@ body{
 }
 
 :root {
-  --primary: #FF5500;
+  --primary: #005FF9;
   --secondary: #A5F469;
   --white: #FFFFFF;
-  --gray: #8F8F8F;
-  --black: #0D0B0C;
+  --gray: #B0B0B0;
+  --black: #19191A;
   --red: #DE5327;
-  --background: #F3F3F7;
+  --background: #F9FAFB;
   --gray-econdary: #EFF1F4;
-  --primary-overlay: #FF550010;
+  --primary-overlay: #005FF910;
   --black-overlay: #05104040;
   --white-overlay: #FFFFFF40;
   --red-econdoverlayary: #DE532710;

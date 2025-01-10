@@ -16,7 +16,7 @@ import { Loader2 } from "lucide-react";
 import loginFormSchema from "@/utilities/form-schema/login-form-schema";
 import LoginAction from "@/utilities/server-actions/login";
 import { useRouter } from "next/navigation";
-import useToken from "@/store/auth/useToken";
+import useAuth from "@/store/auth/useAuth";
 import { setCookie } from "@/lib/cookies";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
@@ -24,7 +24,7 @@ import { Badge } from "@/components/ui/badge";
 const Register = () => {
     const [pending, startSubmiting] = useTransition();
     const { push } = useRouter();
-    const { setToken } = useToken();
+    const { setToken } = useAuth();
 
     const form = useForm<z.infer<typeof loginFormSchema>>({
         resolver: zodResolver(loginFormSchema),
@@ -89,7 +89,7 @@ const Register = () => {
                         )}
                     />
                     <Button type="submit" className="mt-5 w-full flex items-center justify-center">
-                        {pending ? <Loader2 className="animate-spin" /> : "Create Account"}
+                        {pending ? <Loader2 className="animate-spin" /> : "Login"}
                     </Button>
                     <Separator className="my-7 mt-10 bg-gray-secondary flex items-center justify-center">
                         <Badge variant={"outline"} className="border-[1px] border-gray text-gray">

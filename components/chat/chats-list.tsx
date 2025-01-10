@@ -11,10 +11,26 @@ import useChatListApi from "@/store/chat/chat-list/useChatListApi";
 import ChatboSkeletone from "../skeletons/chatbox-skeletone";
 import useCurrentUserInfo from "@/store/user/current-user-info";
 import { Skeleton } from "../ui/skeleton";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuPortal,
+    DropdownMenuSeparator,
+    DropdownMenuShortcut,
+    DropdownMenuSub,
+    DropdownMenuSubContent,
+    DropdownMenuSubTrigger,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import useAuth from "@/store/auth/useAuth";
 
 const ChatsList = () => {
     const { getChats, chatListLoading, chatList } = useChatListApi();
     const { getThisUserInfo, userInfo } = useCurrentUserInfo();
+    const { logout } = useAuth();
 
     useEffect(() => {
         getThisUserInfo();
@@ -45,9 +61,33 @@ const ChatsList = () => {
                         </>
                     )}
                 </div>
-                <Button size="icon" className="bg-red-overlay shadow-none text-red">
-                    <MoreVertical />
-                </Button>
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button size="icon" className="bg-primary-overlay shadow-none text-primary">
+                            <MoreVertical />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-56 bg-background border-gray">
+                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuGroup>
+                            <DropdownMenuItem className="hover:bg-gray-secondary cursor-pointer transition-colors">
+                                Notifications
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className="hover:bg-gray-secondary cursor-pointer transition-colors">
+                                Requests
+                            </DropdownMenuItem>
+                        </DropdownMenuGroup>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                            className="bg-red-overlay text-red cursor-pointer hover:bg-red hover:text-white rounded-md transition-all"
+                            onClick={logout}
+                        >
+                            Log out
+                            <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
             </div>
             <div className="w-full h-full p-2 overflow-scroll flex flex-col items-center gap-3">
                 <Input

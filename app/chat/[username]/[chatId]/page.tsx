@@ -72,7 +72,7 @@ const Page = () => {
                     </div>
                 </div>
                 <div>
-                    <Button className="bg-red-overlay shadow-none text-red flex items-center gap-2 px-3">
+                    <Button className="bg-primary-overlay shadow-none text-primary flex items-center gap-2 px-3">
                         <PhoneCall />
                         Call
                     </Button>
