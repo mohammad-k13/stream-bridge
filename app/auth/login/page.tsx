@@ -9,6 +9,7 @@ import { z } from "zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import Cookies from "js-cookie";
 import { Loader2 } from "lucide-react";
@@ -17,6 +18,8 @@ import LoginAction from "@/utilities/server-actions/login";
 import { useRouter } from "next/navigation";
 import useToken from "@/store/auth/useToken";
 import { setCookie } from "@/lib/cookies";
+import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
 
 const Register = () => {
     const [pending, startSubmiting] = useTransition();
@@ -53,7 +56,7 @@ const Register = () => {
     };
 
     return (
-        <article className="max-md:w-[95%] w-[450px] p-5 rounded-md bg-white shadow-lg border-[1px] border-gray-secondary">
+        <article className="w-full p-5 rounded-md bg-white shadow-lg border-[1px] border-gray-secondary">
             <h2 className="font-bold text-heading-1 text-center">Welcome back!</h2>
             <p className="text-body text-gray text-center mb-5">We are excited to see you again</p>
             <div className="h-[1px] w-3/4 bg-gray opacity-25 rounded-md my-3 mx-auto"></div>
@@ -88,6 +91,25 @@ const Register = () => {
                     <Button type="submit" className="mt-5 w-full flex items-center justify-center">
                         {pending ? <Loader2 className="animate-spin" /> : "Create Account"}
                     </Button>
+                    <Separator className="my-7 mt-10 bg-gray-secondary flex items-center justify-center">
+                        <Badge variant={"outline"} className="border-[1px] border-gray text-gray">
+                            Links
+                        </Badge>
+                    </Separator>
+                    <div className="w-full flex max-md:flex-col justify-center items-center gap-2">
+                        <Link
+                            href={"/auth/register"}
+                            className="text-primary hover:bg-primary-overlay w-1/2 py-1 rounded-md text-center"
+                        >
+                            Register
+                        </Link>
+                        <Link
+                            href={"/"}
+                            className="text-primary hover:bg-primary-overlay w-1/2 py-1 rounded-md text-center"
+                        >
+                            Home
+                        </Link>
+                    </div>
                 </form>
             </Form>
         </article>

@@ -7,8 +7,8 @@ type Props = {
 
 const AuthLayout = ({ children }: Props) => {
   return (
-    <section className="w-full max-w-[2000px] mx-auto  h-screen overflow-hidden flex items-center justify-center relative">
-      <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 z-50">
+    <section className=" max-w-[2000px] mx-auto  h-screen overflow-hidden flex items-center justify-center relative">
+      <div className="w-[95%] max-w-[450px]  absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 z-50">
         {children}
       </div>
       <div className="w-1/2 h-full bg-primary relative max-md:hidden">
