@@ -11,6 +11,8 @@ import { getCookie } from "@/lib/cookies";
 import { IMessage } from "@/types";
 import { redirect } from "next/dist/server/api-utils";
 import { axiosClient } from "@/lib/axios";
+import clsx from "clsx";
+import Message from "@/components/chat/message";
 
 const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL, {
     auth: {
@@ -21,15 +23,16 @@ const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL, {
 const Page = () => {
     const { selectedChat } = useChatListStore();
     const [messages, setMessages] = useState<IMessage[]>([]);
-    const [newMessage, setNewMessage] = useState<string | null>(null);
+    const [newMessage, setNewMessage] = useState<string>("");
 
     const sendMessage = () => {
         socket.emit(
             "send-message",
             { message: newMessage, recieverId: selectedChat!._id },
-            (text: string, senderId: string) => {
-                const message: IMessage = { recieverId: selectedChat!._id, senderId, text };
+            (text: string, id: string) => {
+                const message: IMessage = { text, type: "out_box", id };
                 setMessages((pv) => [...pv, message]);
+                setNewMessage("");
             }
         );
     };
@@ -43,14 +46,8 @@ const Page = () => {
             console.log("Connected to socket server");
         });
 
-        socket.emit("assign-user");
-        socket.on("recive-message", async ({ message, recieverId, senderId }) => {
-            const {
-                data: { isMatch },
-            } = await axiosClient.post("/matchUserIdWithToken", { userId: recieverId });
-            if (isMatch && selectedChat?._id === senderId) {
-                setMessages((prev) => [...prev, { text: message, recieverId, senderId }]);
-            }
+        socket.on("recive-message", async ({ message, id }) => {
+            setMessages((prev) => [...prev, { id, text: message, type: "in_box" }]);
         });
 
         return () => {
@@ -58,6 +55,10 @@ const Page = () => {
             socket.off("connect_error");
         };
     }, []);
+
+    useEffect(() => {
+        console.log(messages);
+    }, [messages.length]);
 
     if (!selectedChat) return <p>Page</p>;
     return (
@@ -71,19 +72,15 @@ const Page = () => {
                     </div>
                 </div>
                 <div>
-                    <Button className="bg-red-overlay shadow-none text-red flex items-center gap-2 px-3">
+                    <Button className="bg-primary-overlay shadow-none text-primary flex items-center gap-2 px-3">
                         <PhoneCall />
                         Call
                     </Button>
                 </div>
             </header>
-            <main className="h-full w-full">
-                {messages.map(({ text, recieverId, senderId }, index) => (
-                    <div key={index} className="flex items-center gap-3 text-sm text-gray">
-                        <p>{text}</p>
-                        <p>senderId: {senderId}</p>
-                        <p>recieverId: {recieverId}</p>
-                    </div>
+            <main className="h-full w-full p-2">
+                {messages.map(({ text, type }, index) => (
+                    <Message key={index} text={text} type={type} />
                 ))}
             </main>
             <footer className="lg:w-2/3 w-full h-fit bg-white absolute z-30 left-1/2 -translate-x-1/2 bottom-0 rounded-lg">
@@ -91,6 +88,7 @@ const Page = () => {
                     <Input
                         placeholder="Type a message"
                         className="py-2 border-gray-secondary"
+                        value={newMessage}
                         onChange={inputOnChangeHandler}
                     />
                     <Button size={"icon"} onClick={sendMessage}>

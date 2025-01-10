@@ -17,13 +17,23 @@ export interface Props {
 }
 
 export interface IMessage {
-    senderId: string;
-    recieverId: string;
+    id: string;
+    type: "in_box" | "out_box";
     text: string;
 }
 
 export interface IUser {
-    username: string,
-    email: string,
-    image: string,
+    username: string;
+    email: string;
+    image: string;
+}
+
+export interface IFriendRequest {
+    _id: string;
+    status: "pending" | "accepted" | "rejected";
+    createdAt: Date,
+    senderInfo: {
+        username: string;
+        image: string;
+    };
 }

@@ -2,16 +2,17 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/providers/theme-contenxt";
-import {Toaster} from "sonner"
+import { Toaster } from "sonner";
+import DialogsProvider from "@/providers/dialogs-provider";
 
 export const metadata: Metadata = {
     title: "Stream Bridge",
     description: "A plartform for make life easier",
     icons: {
         icon: {
-            url: "/logo.png"
-        }
-    }
+            url: "/logo.png",
+        },
+    },
 };
 
 export default function RootLayout({
@@ -22,8 +23,10 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body>
-                <ThemeProvider>{children}</ThemeProvider>
-                <Toaster closeButton richColors/>
+                <ThemeProvider>
+                    <DialogsProvider>{children}</DialogsProvider>
+                </ThemeProvider>
+                <Toaster closeButton richColors />
             </body>
         </html>
     );

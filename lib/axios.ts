@@ -1,5 +1,6 @@
 import axios from "axios";
 import { deleteCookie, getCookie } from "./cookies";
+import { toast } from "sonner";
 
 // for client-side fetching
 export const axiosClient = axios.create({
@@ -28,15 +29,30 @@ axiosClient.interceptors.request.use(
 axiosClient.interceptors.response.use(
     (response) => response,
     async (error) => {
-        if (error.response && error.response.status === 403) {
-            deleteCookie("sessionToken")
-            window.location.href = "/login";
-        }
+        const message = error.response?.data?.message || "Something went wrong";
 
         if (error.response) {
+            if (error.response.status === 403) {
+                deleteCookie("sessionToken");
+                window.location.href = "/auth/login";
+            }
+
+            if (error.response.status === 500) {
+                toast.error(message || "Internal Server Error");
+            }
+
+            if (error.response.status === 404) {
+                toast.error(message || "Resource Not Found");
+            }
+
             console.error("Error:", error.response.status, error.response.data);
         } else if (error.request) {
-            console.error("No response received", error.request);
+            if (error.message === "Failed to fetch") {
+                toast.error("Network error: Unable to reach the server. Please check your connection.");
+            } else {
+                console.error("No response received", error.request);
+                toast.error("No response from the server. Please try again later.");
+            }
         } else {
             console.error("Error setting up request", error.message);
         }
@@ -57,9 +73,7 @@ axiosServer.interceptors.response.use(
     (response) => response,
     async (error) => {
         if (error.response && error.response.status === 403) {
-            // Handle 403 error for server-side requests
             console.error("Access denied. Please login again.");
-            // Optionally, handle server-side redirects or other actions
         }
         if (error.response) {
             console.error("Error:", error.response.status, error.response.data);

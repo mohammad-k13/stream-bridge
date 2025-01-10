@@ -14,7 +14,7 @@ const useChatListApi = create<IUseChatListApi>((set, get) => ({
     chatListLoading: false,
     getChats: async () => {
       set({chatListLoading: true})
-        const { data, status } = await axiosClient<IChat[]>("/chats");
+        const { data, status } = await axiosClient<IChat[]>("/all-friends");
         set({ chatList: data, chatListLoading: false});
     },
 }));
