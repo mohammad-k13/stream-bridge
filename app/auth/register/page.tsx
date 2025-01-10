@@ -40,7 +40,7 @@ const Register = () => {
                 toast.error(message, {});
             } else {
                 toast.success(message);
-                push("/login");
+                push("/auth/login");
                 form.reset();
             }
         });
@@ -96,7 +96,7 @@ const Register = () => {
                         {pending ? <Loader2 className="animate-spin" /> : "Create Account"}
                     </Button>
                     <Separator className="my-7 mt-10 bg-gray-secondary flex items-center justify-center">
-                        <Badge variant={"outline"} className="border-[1px] border-gray text-gray">
+                        <Badge variant={"outline"} className="border-[1px] border-gray text-gray bg-background">
                             Links
                         </Badge>
                     </Separator>

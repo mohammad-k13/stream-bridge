@@ -92,7 +92,7 @@ const Register = () => {
                         {pending ? <Loader2 className="animate-spin" /> : "Login"}
                     </Button>
                     <Separator className="my-7 mt-10 bg-gray-secondary flex items-center justify-center">
-                        <Badge variant={"outline"} className="border-[1px] border-gray text-gray">
+                        <Badge variant={"outline"} className="border-[1px] border-gray text-gray bg-background">
                             Links
                         </Badge>
                     </Separator>

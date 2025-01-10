@@ -3,7 +3,7 @@
 import Image from "next/image";
 import React, { useEffect, useTransition } from "react";
 import { Button } from "../ui/button";
-import { MoreVertical } from "lucide-react";
+import { MoreVertical, Plus } from "lucide-react";
 import { Input } from "../ui/input";
 import ChatBox from "../ui/chat/chat-box";
 import useChatListStore from "@/store/chat/chat-list/useChatListStore";
@@ -26,11 +26,13 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import useAuth from "@/store/auth/useAuth";
+import useDialogs from "@/store/dialogs/useDialogs";
 
 const ChatsList = () => {
     const { getChats, chatListLoading, chatList } = useChatListApi();
     const { getThisUserInfo, userInfo } = useCurrentUserInfo();
     const { logout } = useAuth();
+    const { toggleFriendDialog } = useDialogs();
 
     useEffect(() => {
         getThisUserInfo();
@@ -39,7 +41,7 @@ const ChatsList = () => {
 
     return (
         <>
-            <div className="w-full p-2 px-4 h-14 border-b-[1px] border-gray-secondary flex items-center justify-between">
+            <div className="w-full p-2 px-4 h-14 border-b-[1px] border-gray-secondary flex items-center justify-between gap-2">
                 <div className="w-full flex items-start gap-3">
                     {!userInfo ? (
                         <div className="grow mr-3">
@@ -61,13 +63,16 @@ const ChatsList = () => {
                         </>
                     )}
                 </div>
+                <Button size="icon" className="bg-primary shadow-none text-white" onClick={toggleFriendDialog}>
+                    <Plus />
+                </Button>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button size="icon" className="bg-primary-overlay shadow-none text-primary">
                             <MoreVertical />
                         </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-56 bg-background border-gray">
+                    <DropdownMenuContent className="w-56 bg-background border-gray-secondary">
                         <DropdownMenuLabel>My Account</DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
@@ -84,7 +89,6 @@ const ChatsList = () => {
                             onClick={logout}
                         >
                             Log out
-                            <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
