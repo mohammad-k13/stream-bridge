@@ -50,13 +50,10 @@ const FriendRequestDialog = () => {
         }
     };
 
-    const debouncedFetchUser = useCallback(
-        debounce((value: string) => {
-            const username = value.startsWith("@") ? value.slice(1) : value;
-            fetchUser(username);
-        }, 500), // Wait 500ms after the user stops typing
-        []
-    );
+    const debouncedFetchUser = debounce((value: string) => {
+        const username = value.startsWith("@") ? value.slice(1) : value;
+        fetchUser(username);
+    }, 500);
 
     const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
         debouncedFetchUser(event.target.value);
@@ -93,6 +90,7 @@ const FriendRequestDialog = () => {
                         searchResult &&
                         searchResult.map(({ username, image }, index) => (
                             <div
+                            key={index}
                                 className={clsx(
                                     "flex-1 flex items-center gap-2 px-2 py-1 hover:bg-gray-secondary border-[1px] border-gray-secondary transition-colors rounded-md cursor-pointer",
                                     { "bg-primary-overlay border-primary": selectedUser.includes(username) }
