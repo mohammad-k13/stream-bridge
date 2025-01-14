@@ -10,31 +10,18 @@ import useChatList from "@/store/chat/useChatList";
 import ChatboSkeletone from "../skeletons/chatbox-skeletone";
 import useCurrentUserInfo from "@/store/user/current-user-info";
 import { Skeleton } from "../ui/skeleton";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuGroup,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuPortal,
-    DropdownMenuSeparator,
-    DropdownMenuShortcut,
-    DropdownMenuSub,
-    DropdownMenuSubContent,
-    DropdownMenuSubTrigger,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+
 import useAuth from "@/store/auth/useAuth";
 import useDialogs from "@/store/dialogs/useDialogs";
 import useFriendRequest from "@/store/chat/useFriendRequest";
 import { Badge } from "../ui/badge";
+import ChatlistDropdown from "./chatlist-dropdown";
 
 const ChatsList = () => {
-    const { getFriendRequest, newFriendRequest } = useFriendRequest();
+    const { getFriendRequest } = useFriendRequest();
     const { getChats, chatListLoading, chatList } = useChatList();
     const { getThisUserInfo, userInfo } = useCurrentUserInfo();
-    const { toggleFriendDialog, toggleShowRequest } = useDialogs();
-    const { logout } = useAuth();
+    const { toggleFriendDialog } = useDialogs();
 
     useEffect(() => {
         getThisUserInfo();
@@ -61,57 +48,31 @@ const ChatsList = () => {
                             />{" "}
                             <div>
                                 <h5 className="text-body font-bold">{userInfo?.username}</h5>
-                                <p className="text-caption font-semibold text-gray">{userInfo?.email}</p>
+                                <p className="text-caption font-semibold text-gray">
+                                    {userInfo?.email}
+                                </p>
                             </div>
                         </>
                     )}
                 </div>
-                <Button size="icon" className="bg-primary shadow-none text-white relative" onClick={toggleFriendDialog}>
+                <Button
+                    size="icon"
+                    className="bg-primary shadow-none text-white relative"
+                    onClick={toggleFriendDialog}
+                >
                     <Plus />
                 </Button>
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button size="icon" className="bg-primary-overlay shadow-none text-primary relative">
-                            {newFriendRequest.length > 0 && (
-                                <div className="size-[5px] rounded-full absolute top-[-2px] right-[-2px] bg-red"></div>
-                            )}
-
-                            <MoreVertical />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-56 bg-background border-gray-secondary">
-                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuGroup>
-                            <DropdownMenuItem className="hover:bg-gray-secondary cursor-pointer transition-colors">
-                                Notifications
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                                className="hover:bg-gray-secondary cursor-pointer transition-colors flex items-center justify-between"
-                                onClick={toggleShowRequest}
-                            >
-                                Requests
-                                {newFriendRequest.length > 0 && (
-                                    <Badge className="text-white bg-red">{newFriendRequest.length}</Badge>
-                                )}
-                            </DropdownMenuItem>
-                        </DropdownMenuGroup>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                            className="bg-red-overlay text-red cursor-pointer hover:bg-red hover:text-white rounded-md transition-all"
-                            onClick={logout}
-                        >
-                            Log out
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                <ChatlistDropdown />
             </div>
             <div className="w-full h-full p-2 overflow-scroll flex flex-col items-center gap-3">
                 <Input
                     placeholder="Search messages"
                     className="focus-visible:border-none bg-gray-secondary rounded-md p-2 border-none"
                 />
-                {chatListLoading && Array.from({ length: 5 }).map((_, index) => <ChatboSkeletone key={index} />)}
+                {chatListLoading &&
+                    Array.from({ length: 5 }).map((_, index) => (
+                        <ChatboSkeletone key={index} />
+                    ))}
                 {!chatListLoading &&
                     chatList.map(({ _id, image, username }, index) => (
                         <ChatBox key={_id} _id={_id} image={image} username={username} />

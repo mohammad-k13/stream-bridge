@@ -13,14 +13,10 @@ import { redirect } from "next/dist/server/api-utils";
 import { axiosClient } from "@/lib/axios";
 import clsx from "clsx";
 import Message from "@/components/chat/message";
-
-const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL, {
-    auth: {
-        token: getCookie("sessionToken")?.toString(),
-    },
-});
+import { useSocket } from "@/providers/socket-provider";
 
 const Page = () => {
+    const {socket} = useSocket();
     const { selectedChat } = useChatList();
     const [messages, setMessages] = useState<IMessage[]>([]);
     const [newMessage, setNewMessage] = useState<string>("");
@@ -42,9 +38,7 @@ const Page = () => {
     };
 
     useEffect(() => {
-        socket.on("connect", () => {
-            console.log("Connected to socket server");
-        });
+
 
         socket.on("recive-message", async ({ message, id }) => {
             setMessages((prev) => [...prev, { id, text: message, type: "in_box" }]);
