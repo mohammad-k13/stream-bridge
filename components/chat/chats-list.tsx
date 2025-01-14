@@ -6,8 +6,7 @@ import { Button } from "../ui/button";
 import { MoreVertical, Plus } from "lucide-react";
 import { Input } from "../ui/input";
 import ChatBox from "../ui/chat/chat-box";
-import useChatListStore from "@/store/chat/chat-list/useChatListStore";
-import useChatListApi from "@/store/chat/chat-list/useChatListApi";
+import useChatList from "@/store/chat/useChatList";
 import ChatboSkeletone from "../skeletons/chatbox-skeletone";
 import useCurrentUserInfo from "@/store/user/current-user-info";
 import { Skeleton } from "../ui/skeleton";
@@ -32,7 +31,7 @@ import { Badge } from "../ui/badge";
 
 const ChatsList = () => {
     const { getFriendRequest, newFriendRequest } = useFriendRequest();
-    const { getChats, chatListLoading, chatList } = useChatListApi();
+    const { getChats, chatListLoading, chatList } = useChatList();
     const { getThisUserInfo, userInfo } = useCurrentUserInfo();
     const { toggleFriendDialog, toggleShowRequest } = useDialogs();
     const { logout } = useAuth();

@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import useChatListStore from "@/store/chat/chat-list/useChatListStore";
+import useChatList from "@/store/chat/useChatList";
 import Image from "next/image";
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
@@ -21,7 +21,7 @@ const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL, {
 });
 
 const Page = () => {
-    const { selectedChat } = useChatListStore();
+    const { selectedChat } = useChatList();
     const [messages, setMessages] = useState<IMessage[]>([]);
     const [newMessage, setNewMessage] = useState<string>("");
 

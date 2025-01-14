@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { axiosClient } from "@/lib/axios";
-import useChatListApi from "@/store/chat/chat-list/useChatListApi";
+import useChatList from "@/store/chat/useChatList";
 import useFriendRequest from "@/store/chat/useFriendRequest";
 import useDialogs from "@/store/dialogs/useDialogs";
 import { IFriendRequest } from "@/types";
@@ -16,7 +16,7 @@ import { Badge } from "../ui/badge";
 const RequestListDialog = () => {
     const { showRequests, toggleShowRequest } = useDialogs();
     const { friendRequests } = useFriendRequest();
-    const { getChats } = useChatListApi();
+    const { getChats } = useChatList();
     const [loadingRequest, setLoadingRequest] = useState<{
         id: string | null;
         action: "accept" | "reject" | null;
