@@ -5,7 +5,7 @@ import Image from "next/image";
 import React from "react";
 import { Badge } from "../badge";
 import clsx from "clsx";
-import useChatListStore from "@/store/chat/chat-list/useChatListStore";
+import useChatList from "@/store/chat/useChatList";
 import { redirect, usePathname, useRouter } from "next/navigation";
 
 interface Props extends IChat {
@@ -13,7 +13,7 @@ interface Props extends IChat {
 }
 
 const ChatBox = ({ _id, image, username, timestamp = "12m" }: Props) => {
-    const { selectedChat, setSelectedChat } = useChatListStore();
+    const { selectedChat, setSelectedChat } = useChatList();
     const isSelectedChat = selectedChat?.username === username;
     const pathname = usePathname().split("/")[2];
 

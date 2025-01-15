@@ -1,15 +1,21 @@
 import { axiosClient } from "@/lib/axios";
-import useCurrentUserInfo from "@/store/user/current-user-info";
+import { getCookie } from "@/lib/cookies";
 import { IChat } from "@/types";
 import { create } from "zustand";
 
-export interface IUseChatListApi {
+export interface IuseChatList {
+    selectedChat: IChat | null;
+    setSelectedChat: (chat: IChat) => void;
+
     chatList: IChat[];
     chatListLoading: boolean,
     getChats: () => void;
 }
 
-const useChatListApi = create<IUseChatListApi>((set, get) => ({
+const useChatList = create<IuseChatList>((set, get) => ({
+    selectedChat: null,
+    setSelectedChat: (chat) => set({ selectedChat: chat }),
+
     chatList: [],
     chatListLoading: false,
     getChats: async () => {
@@ -19,4 +25,4 @@ const useChatListApi = create<IUseChatListApi>((set, get) => ({
     },
 }));
 
-export default useChatListApi;
+export default useChatList;
