@@ -1,22 +1,36 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
 import { axiosClient } from "@/lib/axios";
 import useChatList from "@/store/chat/useChatList";
 import useFriendRequest from "@/store/chat/useFriendRequest";
 import useDialogs from "@/store/dialogs/useDialogs";
 import { IFriendRequest } from "@/types";
-import { Loader2 } from "lucide-react";
+import { Eye, Loader2 } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Badge } from "../ui/badge";
 
+export interface IAnswerToRequest {
+    username: string;
+    request_id: string;
+    newStatus: IFriendRequest["status"];
+    action: "accept" | "reject";
+}
+
 const RequestListDialog = () => {
     const { showRequests, toggleShowRequest } = useDialogs();
-    const { friendRequests } = useFriendRequest();
+    const { friendRequests, markAsReadThisNotification } = useFriendRequest();
     const { getChats } = useChatList();
+
     const [loadingRequest, setLoadingRequest] = useState<{
         id: string | null;
         action: "accept" | "reject" | null;
@@ -35,12 +49,7 @@ const RequestListDialog = () => {
         request_id,
         username,
         action,
-    }: {
-        username: string;
-        request_id: string;
-        newStatus: IFriendRequest["status"];
-        action: "accept" | "reject";
-    }) => {
+    }: IAnswerToRequest) => {
         setLoadingRequest({ id: request_id, action });
         const body = {
             newStatus,
@@ -58,10 +67,12 @@ const RequestListDialog = () => {
 
     return (
         <Dialog open={showRequests} onOpenChange={toggleShowRequest}>
-            <DialogContent className="sm:max-w-[425px] h-[400px] bg-white border-gray-secondary flex items-center justify-start flex-col">
+            <DialogContent className="sm:max-w-[425px] h-[400px] overflow-x-hidden overflow-y-auto bg-white border-gray-secondary flex items-center justify-start flex-col">
                 <DialogHeader className="w-full">
                     <DialogTitle>Friend Requests</DialogTitle>
-                    <DialogDescription>View and manage your incoming friend requests</DialogDescription>
+                    <DialogDescription>
+                        View and manage your incoming friend requests
+                    </DialogDescription>
                 </DialogHeader>
                 <div className="w-full grid gap-4 py-4">
                     {friendRequests.map((item) => (
@@ -69,7 +80,7 @@ const RequestListDialog = () => {
                             key={item._id}
                             className="w-full h-full py-1 px-2 rounded-md flex items-center justify-between border-gray-secondary"
                         >
-                            <div className="flex items-center justify-center gap-2">
+                            <div className="flex items-start justify-center gap-2">
                                 <Image
                                     src={item.senderInfo.image}
                                     alt="sender-profile"
@@ -79,7 +90,9 @@ const RequestListDialog = () => {
                                 />
                                 <div className="flex items-start justify-start flex-col">
                                     <p className="text-body">{item.senderInfo.username}</p>
-                                    <p className="text-gray text-caption">{formatDate(item.createdAt)}</p>
+                                    <p className="text-gray text-caption">
+                                        {formatDate(item.createdAt)}
+                                    </p>
                                 </div>
                             </div>
                             <div className="flex items-center justify-center gap-2">
@@ -97,10 +110,12 @@ const RequestListDialog = () => {
                                                 })
                                             }
                                             disabled={
-                                                loadingRequest.id === item._id && loadingRequest.action === "accept"
+                                                loadingRequest.id === item._id &&
+                                                loadingRequest.action === "accept"
                                             }
                                         >
-                                            {loadingRequest.id === item._id && loadingRequest.action === "accept" ? (
+                                            {loadingRequest.id === item._id &&
+                                            loadingRequest.action === "accept" ? (
                                                 <Loader2 className="animate-spin" />
                                             ) : (
                                                 "Accept"
@@ -118,10 +133,12 @@ const RequestListDialog = () => {
                                                 })
                                             }
                                             disabled={
-                                                loadingRequest.id === item._id && loadingRequest.action === "reject"
+                                                loadingRequest.id === item._id &&
+                                                loadingRequest.action === "reject"
                                             }
                                         >
-                                            {loadingRequest.id === item._id && loadingRequest.action === "reject" ? (
+                                            {loadingRequest.id === item._id &&
+                                            loadingRequest.action === "reject" ? (
                                                 <Loader2 className="animate-spin" />
                                             ) : (
                                                 "Reject"
@@ -129,10 +146,23 @@ const RequestListDialog = () => {
                                         </Button>
                                     </>
                                 ) : item.status === "accepted" ? (
-                                    <Badge variant={"default"} className="text-white">Accepted</Badge>
+                                    <Badge variant={"default"} className="text-white">
+                                        Accepted
+                                    </Badge>
                                 ) : (
-                                    <Badge variant={"default"} className="text-white">Rejected</Badge>
+                                    <Badge variant={"default"} className="text-white">
+                                        Rejected
+                                    </Badge>
                                 )}
+                               {!item.isRead && <Button
+                                    variant={"ghost"}
+                                    size={"icon"}
+                                    className="!text-caption text-gray p m-0 hover:bg-gray-secondary"
+                                    title="Mark As Read"
+                                    onClick={() => markAsReadThisNotification(item._id)}
+                                >
+                                    <Eye />
+                                </Button>}
                             </div>
                         </div>
                     ))}

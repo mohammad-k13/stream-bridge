@@ -13,7 +13,7 @@ import { redirect } from "next/dist/server/api-utils";
 import { axiosClient } from "@/lib/axios";
 import clsx from "clsx";
 import Message from "@/components/chat/message";
-import { useSocket } from "@/providers/socket-provider";
+import { useSocket } from "@/store/socket";
 
 const Page = () => {
     const {socket} = useSocket();
@@ -22,7 +22,7 @@ const Page = () => {
     const [newMessage, setNewMessage] = useState<string>("");
 
     const sendMessage = () => {
-        socket.emit(
+        socket?.emit(
             "send-message",
             { message: newMessage, recieverId: selectedChat!._id },
             (text: string, id: string) => {
@@ -38,15 +38,13 @@ const Page = () => {
     };
 
     useEffect(() => {
-
-
-        socket.on("recive-message", async ({ message, id }) => {
+        socket?.on("recive-message", async ({ message, id }: any) => {
             setMessages((prev) => [...prev, { id, text: message, type: "in_box" }]);
         });
 
         return () => {
-            socket.off("connect");
-            socket.off("connect_error");
+            socket?.off("connect");
+            socket?.off("connect_error");
         };
     }, []);
 

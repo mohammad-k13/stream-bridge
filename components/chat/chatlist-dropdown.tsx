@@ -21,21 +21,47 @@ import { MoreVertical } from "lucide-react";
 import useFriendRequest from "@/store/chat/useFriendRequest";
 import useDialogs from "@/store/dialogs/useDialogs";
 import useAuth from "@/store/auth/useAuth";
-import { useSocket } from "@/providers/socket-provider";
+import { IFriendRequest, IReceiveNotification } from "@/types";
+import { toast } from "sonner";
+import { useSocket } from "@/store/socket";
 
 const ChatlistDropdown = () => {
-    const { newFriendRequest } = useFriendRequest();
-    const { toggleShowRequest } = useDialogs();
+    const { newFriendRequest, setNewFriendRequest } = useFriendRequest();
+    const { toggleShowRequest, showRequests } = useDialogs();
     const { logout } = useAuth();
     const { socket } = useSocket();
 
+    console.count()
     useEffect(() => {
-        if(socket){
+        if (socket) {
             socket.emit("notification:getAll", (allNotification: any) => {
                 console.log("allNotification", allNotification);
             });
+
+            socket.on("notification:received", (data: IReceiveNotification) => {
+                const {
+                    id,
+                    content,
+                    isRead,
+                    metaData: { image, username, createAt },
+                    type,
+                } = data;
+
+                const newReuqest: IFriendRequest = {
+                    _id: id,
+                    isRead: isRead,
+                    status: "pending",
+                    senderInfo: {
+                        image,
+                        username,
+                    },
+                    createdAt: createAt,
+                };
+                setNewFriendRequest(newReuqest);
+                toast.info(`${content} from ${username}`);
+            });
         }
-    }, [socket]);
+    }, [showRequests]);
 
     return (
         <DropdownMenu>

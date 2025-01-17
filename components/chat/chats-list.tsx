@@ -14,7 +14,6 @@ import { Skeleton } from "../ui/skeleton";
 import useAuth from "@/store/auth/useAuth";
 import useDialogs from "@/store/dialogs/useDialogs";
 import useFriendRequest from "@/store/chat/useFriendRequest";
-import { Badge } from "../ui/badge";
 import ChatlistDropdown from "./chatlist-dropdown";
 
 const ChatsList = () => {
