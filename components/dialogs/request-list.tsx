@@ -28,7 +28,7 @@ export interface IAnswerToRequest {
 
 const RequestListDialog = () => {
     const { showRequests, toggleShowRequest } = useDialogs();
-    const { friendRequests, markAsReadThisNotification } = useFriendRequest();
+    const { friendRequests } = useFriendRequest();
     const { getChats } = useChatList();
 
     const [loadingRequest, setLoadingRequest] = useState<{
@@ -154,15 +154,6 @@ const RequestListDialog = () => {
                                         Rejected
                                     </Badge>
                                 )}
-                               {!item.isRead && <Button
-                                    variant={"ghost"}
-                                    size={"icon"}
-                                    className="!text-caption text-gray p m-0 hover:bg-gray-secondary"
-                                    title="Mark As Read"
-                                    onClick={() => markAsReadThisNotification(item._id)}
-                                >
-                                    <Eye />
-                                </Button>}
                             </div>
                         </div>
                     ))}

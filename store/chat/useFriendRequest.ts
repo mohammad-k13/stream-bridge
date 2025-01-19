@@ -1,5 +1,5 @@
 import { axiosClient } from "@/lib/axios";
-import { IChat, IFriendRequest } from "@/types";
+import { IChat, IFriendRequest, IReceiveNotification } from "@/types";
 import { Socket } from "socket.io-client";
 import { create } from "zustand";
 import { useSocket } from "../socket";
@@ -9,8 +9,7 @@ interface IUseFriendRequest {
     friendRequests: IFriendRequest[];
     newFriendRequest: IFriendRequest[];
     getFriendRequest: () => void;
-    setNewFriendRequest: (friendRequests: IFriendRequest) => void;
-    markAsReadThisNotification: (notificationId: string) => void;
+    addNewFriendRequest: (request: IFriendRequest) => void;
 }
 
 const useFriendRequest = create<IUseFriendRequest>((set, get) => ({
@@ -18,21 +17,11 @@ const useFriendRequest = create<IUseFriendRequest>((set, get) => ({
     newFriendRequest: [],
     getFriendRequest: async () => {
         const { data } = await axiosClient<IFriendRequest[]>("/all-friend-request");
-        set({ friendRequests: data, newFriendRequest: data.filter((request) => !request.isRead) });
+        set({ friendRequests: data });
     },
-    setNewFriendRequest: (friendRequest) => {
-        set({newFriendRequest: [...get().newFriendRequest, friendRequest]})
+    addNewFriendRequest: (newRequest) => {
+        set((state) => ({ friendRequests: [...state.friendRequests, newRequest] }));
     },
-    markAsReadThisNotification: (notificationId) => {
-        const socket = useSocket.getState().socket;
-       if(socket) {
-        socket.emit("notification:markAsRead", {notificationId}, (message: string) => {
-            toast.success(message);
-            const updatedRequest = useFriendRequest.getState().newFriendRequest.filter(item => item._id !== notificationId);
-            useFriendRequest.setState({newFriendRequest: updatedRequest})
-        });
-       }
-    }
 }));
 
 export default useFriendRequest;

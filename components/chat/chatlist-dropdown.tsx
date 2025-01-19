@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 //ui
 import {
     DropdownMenu,
@@ -26,12 +26,13 @@ import { toast } from "sonner";
 import { useSocket } from "@/store/socket";
 
 const ChatlistDropdown = () => {
-    const { newFriendRequest, setNewFriendRequest } = useFriendRequest();
+    const { friendRequests, addNewFriendRequest} = useFriendRequest();
     const { toggleShowRequest, showRequests } = useDialogs();
     const { logout } = useAuth();
     const { socket } = useSocket();
 
-    console.count()
+    const newFriendRequest = friendRequests.filter(request => !request.isRead)
+
     useEffect(() => {
         if (socket) {
             socket.emit("notification:getAll", (allNotification: any) => {
@@ -57,7 +58,7 @@ const ChatlistDropdown = () => {
                     },
                     createdAt: createAt,
                 };
-                setNewFriendRequest(newReuqest);
+                addNewFriendRequest(newReuqest);
                 toast.info(`${content} from ${username}`);
             });
         }
