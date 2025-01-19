@@ -9,7 +9,7 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog";
 import { axiosClient } from "@/lib/axios";
-import useChatList from "@/store/chat/useChatList";
+import useFriendsList from "@/store/chat/useFriendsList";
 import useFriendRequest from "@/store/chat/useFriendRequest";
 import useDialogs from "@/store/dialogs/useDialogs";
 import { IFriendRequest } from "@/types";
@@ -29,7 +29,7 @@ export interface IAnswerToRequest {
 const RequestListDialog = () => {
     const { showRequests, toggleShowRequest } = useDialogs();
     const { friendRequests } = useFriendRequest();
-    const { getChats } = useChatList();
+    const { getFriends } = useFriendsList();
 
     const [loadingRequest, setLoadingRequest] = useState<{
         id: string | null;
@@ -60,7 +60,6 @@ const RequestListDialog = () => {
             data: { message },
         } = await axiosClient.post("/answer-to-request", body);
         toast.success(message);
-        getChats();
         setLoadingRequest({ id: null, action: null });
         toggleShowRequest();
     };

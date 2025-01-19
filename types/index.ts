@@ -6,7 +6,7 @@ export interface IServerActionState {
     payload?: any;
 }
 
-export interface IChat {
+export interface IFriend {
     username: string;
     image: string;
     _id: string;
@@ -40,13 +40,15 @@ export interface IFriendRequest {
 }
 
 
-export type NotificationType = "friend_request" | "message" | "mention" | "system";
+export type NotificationType = "friend_request" | "message" | "mention" | "system" | "friend_request_accepted" | "friend_request_rejected";
 
 export const NotificationContent: Record<NotificationType, string> = {
   friend_request: "You have a new friend request.",
   message: "You received a new message.",
   mention: "You were mentioned in a post.",
   system: "System notification: Check for updates.",
+  friend_request_accepted: "Your friend request has been accepted!",
+  friend_request_rejected: "Your friend request has been rejected.",
 };
 
 export interface IReceiveNotification<T extends NotificationType = NotificationType> {

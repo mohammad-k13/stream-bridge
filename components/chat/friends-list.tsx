@@ -6,7 +6,7 @@ import { Button } from "../ui/button";
 import { MoreVertical, Plus } from "lucide-react";
 import { Input } from "../ui/input";
 import ChatBox from "../ui/chat/chat-box";
-import useChatList from "@/store/chat/useChatList";
+import useFriendsList from "@/store/chat/useFriendsList";
 import ChatboSkeletone from "../skeletons/chatbox-skeletone";
 import useCurrentUserInfo from "@/store/user/current-user-info";
 import { Skeleton } from "../ui/skeleton";
@@ -14,17 +14,18 @@ import { Skeleton } from "../ui/skeleton";
 import useAuth from "@/store/auth/useAuth";
 import useDialogs from "@/store/dialogs/useDialogs";
 import useFriendRequest from "@/store/chat/useFriendRequest";
-import ChatlistDropdown from "./chatlist-dropdown";
+import SidebarDropdown from "./sidebar-dropdown";
 
-const ChatsList = () => {
+const FriendsList = () => {
     const { getFriendRequest } = useFriendRequest();
-    const { getChats, chatListLoading, chatList } = useChatList();
+    const { getFriends, updateFriendsList, friendsListLoading, friendsList } = useFriendsList();
     const { getThisUserInfo, userInfo } = useCurrentUserInfo();
     const { toggleFriendDialog } = useDialogs();
 
     useEffect(() => {
         getThisUserInfo();
-        getChats();
+        getFriends();
+        updateFriendsList(); //this will list to 'new-friends' event(socket.io)
         getFriendRequest();
     }, []);
 
@@ -61,19 +62,19 @@ const ChatsList = () => {
                 >
                     <Plus />
                 </Button>
-                <ChatlistDropdown />
+                <SidebarDropdown />
             </div>
             <div className="w-full h-full p-2 overflow-scroll flex flex-col items-center gap-3">
                 <Input
                     placeholder="Search messages"
                     className="focus-visible:border-none bg-gray-secondary rounded-md p-2 border-none"
                 />
-                {chatListLoading &&
+                {friendsListLoading &&
                     Array.from({ length: 5 }).map((_, index) => (
                         <ChatboSkeletone key={index} />
                     ))}
-                {!chatListLoading &&
-                    chatList.map(({ _id, image, username }, index) => (
+                {!friendsListLoading &&
+                    friendsList.map(({ _id, image, username }, index) => (
                         <ChatBox key={_id} _id={_id} image={image} username={username} />
                     ))}
             </div>
@@ -81,4 +82,4 @@ const ChatsList = () => {
     );
 };
 
-export default ChatsList;
+export default FriendsList;

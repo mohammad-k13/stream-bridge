@@ -25,7 +25,7 @@ import { IFriendRequest, IReceiveNotification } from "@/types";
 import { toast } from "sonner";
 import { useSocket } from "@/store/socket";
 
-const ChatlistDropdown = () => {
+const SidebarDropdown = () => {
     const { friendRequests, addNewFriendRequest} = useFriendRequest();
     const { toggleShowRequest, showRequests } = useDialogs();
     const { logout } = useAuth();
@@ -109,4 +109,4 @@ const ChatlistDropdown = () => {
     );
 };
 
-export default ChatlistDropdown;
+export default SidebarDropdown;

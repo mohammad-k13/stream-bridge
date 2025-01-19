@@ -1,19 +1,19 @@
 "use client";
 
-import { IChat } from "@/types";
+import { IFriend } from "@/types";
 import Image from "next/image";
 import React from "react";
 import { Badge } from "../badge";
 import clsx from "clsx";
-import useChatList from "@/store/chat/useChatList";
+import useFriendsList from "@/store/chat/useFriendsList";
 import { redirect, usePathname, useRouter } from "next/navigation";
 
-interface Props extends IChat {
+interface Props extends IFriend {
     timestamp?: string;
 }
 
 const ChatBox = ({ _id, image, username, timestamp = "12m" }: Props) => {
-    const { selectedChat, setSelectedChat } = useChatList();
+    const { selectedChat, setSelectedChat } = useFriendsList();
     const isSelectedChat = selectedChat?.username === username;
     const pathname = usePathname().split("/")[2];
 

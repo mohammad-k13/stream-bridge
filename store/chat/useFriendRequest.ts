@@ -1,9 +1,6 @@
 import { axiosClient } from "@/lib/axios";
-import { IChat, IFriendRequest, IReceiveNotification } from "@/types";
-import { Socket } from "socket.io-client";
+import {  IFriendRequest } from "@/types";
 import { create } from "zustand";
-import { useSocket } from "../socket";
-import { toast } from "sonner";
 
 interface IUseFriendRequest {
     friendRequests: IFriendRequest[];

@@ -6,11 +6,55 @@ import { toast } from "sonner";
 export interface IUseNotification {
     notifications: IReceiveNotification[];
     getAllNotification: () => void;
+    listToNotifications: () => void;
     markAsReadThisNotification: (notificationId: string) => void;
 }
 
 const useNotification = create<IUseNotification>((set, get) => ({
     notifications: [],
+    listToNotifications: () => {
+        const socket = useSocket.getState().socket;
+        if (!socket) return;
+
+        socket.emit("notification:getAll", (allNotification: any) => {
+            console.log("allNotification", allNotification);
+        });
+
+        socket.on("notification:received", (data: IReceiveNotification) => {
+            const {
+                id,
+                content,
+                isRead,
+                metaData: { image, username, createAt },
+                type,
+            } = data;
+
+            switch (type) {
+                case "friend_request":
+                    // Handle friend request
+                    toast.info(`${content} from ${username}`);
+                    break;
+
+                case "message":
+                    // Handle new message
+                    toast.success(`${content} from ${username}`);
+                    break;
+
+                case "mention":
+                    // Handle mention
+                    toast.info(`${content} - you were mentioned by ${username}`);
+                    break;
+
+                case "system":
+                    // Handle system notification
+                    toast.info(`System: ${content}`);
+                    break;
+
+                default:
+                    break;
+            }
+        });
+    },
     getAllNotification: () => {},
     markAsReadThisNotification: (notificationId) => {
         const socket = useSocket.getState().socket;

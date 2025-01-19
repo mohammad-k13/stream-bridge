@@ -1,3 +1,3 @@
-import { IChat } from "@/types";
+import { IFriend } from "@/types";
 
-export const chatList: IChat[] = [];
+export const friendsList: IFriend[] = [];
