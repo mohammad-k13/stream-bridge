@@ -2,6 +2,7 @@ import { IReceiveNotification } from "@/types";
 import { create } from "zustand";
 import { useSocket } from "../socket";
 import { toast } from "sonner";
+import useFriendRequest from "./useFriendRequest";
 
 export interface IUseNotification {
     notifications: IReceiveNotification[];
@@ -21,33 +22,24 @@ const useNotification = create<IUseNotification>((set, get) => ({
         });
 
         socket.on("notification:received", (data: IReceiveNotification) => {
-            const {
-                id,
-                content,
-                isRead,
-                metaData: { image, username, createAt },
-                type,
-            } = data;
+            const { id, content, isRead, metaData: any, type } = data;
 
             switch (type) {
                 case "friend_request":
                     // Handle friend request
-                    toast.info(`${content} from ${username}`);
+                    // useFriendRequest().addNewFriendRequest()
                     break;
 
                 case "message":
                     // Handle new message
-                    toast.success(`${content} from ${username}`);
                     break;
 
                 case "mention":
                     // Handle mention
-                    toast.info(`${content} - you were mentioned by ${username}`);
                     break;
 
                 case "system":
                     // Handle system notification
-                    toast.info(`System: ${content}`);
                     break;
 
                 default:

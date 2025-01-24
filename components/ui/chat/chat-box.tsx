@@ -13,14 +13,14 @@ interface Props extends IFriend {
 }
 
 const ChatBox = ({ _id, image, username, timestamp = "12m" }: Props) => {
-    const { selectedChat, setSelectedChat } = useFriendsList();
-    const isSelectedChat = selectedChat?.username === username;
+    const { selectedFriend, setSelectedFriend } = useFriendsList();
+    const isselectedFriend = selectedFriend?.username === username;
     const pathname = usePathname().split("/")[2];
 
 
     const handleClick = () => {
         const chat = { _id, image, username };
-        setSelectedChat(chat);
+        setSelectedFriend(chat);
         redirect(`/chat/${pathname}/${_id}`)
     };
 
@@ -30,7 +30,7 @@ const ChatBox = ({ _id, image, username, timestamp = "12m" }: Props) => {
             tabIndex={0}
             className={clsx(
                 "w-full h-fit p-2 rounded-md flex items-start gap-3 hover:bg-gray-secondary transition-colors cursor-pointer",
-                { "bg-gray-secondary": isSelectedChat }
+                { "bg-gray-secondary": isselectedFriend }
             )}
             onClick={handleClick}
             onKeyDown={(e) => e.key === "Enter" && handleClick()}
