@@ -1,4 +1,9 @@
-import { IReceiveNotification } from "@/types";
+import {
+    IFriendRequest,
+    IReceiveNotification,
+    NotificationMetaData,
+    NotificationType,
+} from "@/types";
 import { create } from "zustand";
 import { useSocket } from "../socket";
 import { toast } from "sonner";
@@ -7,38 +12,67 @@ import useFriendRequest from "./useFriendRequest";
 export interface IUseNotification {
     notifications: IReceiveNotification[];
     getAllNotification: () => void;
-    listToNotifications: () => void;
+    subscribeToNotifications: () => void;
     markAsReadThisNotification: (notificationId: string) => void;
 }
 
 const useNotification = create<IUseNotification>((set, get) => ({
     notifications: [],
-    listToNotifications: () => {
+    subscribeToNotifications: () => {
         const socket = useSocket.getState().socket;
         if (!socket) return;
 
         socket.emit("notification:getAll", (allNotification: any) => {
+            //todo: show all notification in notification dialog
             console.log("allNotification", allNotification);
         });
 
         socket.on("notification:received", (data: IReceiveNotification) => {
-            const { id, content, isRead, metaData: any, type } = data;
+            console.log("notification recived", data);
+            const { id, content, isRead, metaData, type } = data;
 
             switch (type) {
                 case "friend_request":
                     // Handle friend request
-                    // useFriendRequest().addNewFriendRequest()
+                    let { createdAt, image, username: senderUsername } =
+                        metaData as NotificationMetaData[typeof type];
+
+                    const newNotification: IFriendRequest = {
+                        _id: id,
+                        createdAt,
+                        isRead,
+                        senderInfo: { image, username: senderUsername },
+                        status: "pending",
+                    };
+                    useFriendRequest.getState().addNewFriendRequest(newNotification);
+                    toast.info(`${content}`, { description: `Sender Username: ${senderUsername}` });
+                    break;
+                case "friend_request_accepted":
+                    // Handle friend request was accepted
+                    const { username } =
+                    metaData as NotificationMetaData[typeof type];
+                    
+                    toast.info(`${username} reject your friend request`)
+                    break;
+                case "friend_request_rejected":
+                    // Handle friend request was rejected
                     break;
 
                 case "message":
+                    // const MessageMetaData = metaData as IReceiveNotification<typeof type>;
+
                     // Handle new message
                     break;
 
                 case "mention":
+                    // const MentionMetaData = metaData as IReceiveNotification<typeof type>;
+
                     // Handle mention
                     break;
 
                 case "system":
+                    // const SystemMetaData = metaData as IReceiveNotification<typeof type>;
+
                     // Handle system notification
                     break;
 

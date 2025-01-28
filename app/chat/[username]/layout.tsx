@@ -4,12 +4,15 @@ import React, { useEffect } from "react";
 import { type Props } from "@/types";
 import FriendsList from "@/components/chat/friends-list";
 import {useSocket} from "@/store/socket";
+import useNotification from "@/store/chat/useNotification";
 
 const ChatLayout = ({ children }: Props) => {
     const { connectToSocket, disconnectSocket } = useSocket();
+    const { subscribeToNotifications } = useNotification();
 
     useEffect(() => {
         connectToSocket();
+        subscribeToNotifications();
 
         return () => {
             disconnectSocket();
