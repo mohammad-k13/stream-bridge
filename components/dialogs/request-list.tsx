@@ -56,12 +56,12 @@ const RequestListDialog = () => {
             request_id,
             username,
         };
+        setLoadingRequest({ id: null, action: null });
+        toggleShowRequest();
         const {
             data: { message },
         } = await axiosClient.post("/answer-to-request", body);
         toast.success(message);
-        setLoadingRequest({ id: null, action: null });
-        toggleShowRequest();
     };
 
     return (

@@ -28,7 +28,6 @@ const useNotification = create<IUseNotification>((set, get) => ({
         });
 
         socket.on("notification:received", (data: IReceiveNotification) => {
-            console.log("notification recived", data);
             const { id, content, isRead, metaData, type } = data;
 
             switch (type) {
