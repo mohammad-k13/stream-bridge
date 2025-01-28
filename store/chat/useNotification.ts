@@ -34,8 +34,11 @@ const useNotification = create<IUseNotification>((set, get) => ({
             switch (type) {
                 case "friend_request":
                     // Handle friend request
-                    let { createdAt, image, username: senderUsername } =
-                        metaData as NotificationMetaData[typeof type];
+                    let {
+                        createdAt,
+                        image,
+                        username: senderUsername,
+                    } = metaData as NotificationMetaData[typeof type];
 
                     const newNotification: IFriendRequest = {
                         _id: id,
@@ -45,17 +48,21 @@ const useNotification = create<IUseNotification>((set, get) => ({
                         status: "pending",
                     };
                     useFriendRequest.getState().addNewFriendRequest(newNotification);
-                    toast.info(`${content}`, { description: `Sender Username: ${senderUsername}` });
+                    toast.info(`${content}`, {
+                        description: `Sender Username: ${senderUsername}`,
+                    });
                     break;
                 case "friend_request_accepted":
                     // Handle friend request was accepted
-                    const { username } =
-                    metaData as NotificationMetaData[typeof type];
-                    
-                    toast.info(`${username} reject your friend request`)
+                    const { username: accepterUsername } = metaData as NotificationMetaData[typeof type];
+
+                    toast.success(`${accepterUsername} accept your friend request`);
                     break;
                 case "friend_request_rejected":
                     // Handle friend request was rejected
+                    const { username: rejecterUsername } = metaData as NotificationMetaData[typeof type];
+
+                    toast.error(`${rejecterUsername} reject your friend request`);
                     break;
 
                 case "message":
