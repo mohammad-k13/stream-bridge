@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import useChatList from "@/store/chat/useChatList";
+import useFriendsList from "@/store/chat/useFriendsList";
 import Image from "next/image";
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
@@ -13,18 +13,18 @@ import { redirect } from "next/dist/server/api-utils";
 import { axiosClient } from "@/lib/axios";
 import clsx from "clsx";
 import Message from "@/components/chat/message";
-import { useSocket } from "@/providers/socket-provider";
+import { useSocket } from "@/store/socket";
 
 const Page = () => {
     const {socket} = useSocket();
-    const { selectedChat } = useChatList();
+    const { selectedFriend } = useFriendsList();
     const [messages, setMessages] = useState<IMessage[]>([]);
     const [newMessage, setNewMessage] = useState<string>("");
 
     const sendMessage = () => {
-        socket.emit(
+        socket?.emit(
             "send-message",
-            { message: newMessage, recieverId: selectedChat!._id },
+            { message: newMessage, recieverId: selectedFriend!._id },
             (text: string, id: string) => {
                 const message: IMessage = { text, type: "out_box", id };
                 setMessages((pv) => [...pv, message]);
@@ -38,15 +38,13 @@ const Page = () => {
     };
 
     useEffect(() => {
-
-
-        socket.on("recive-message", async ({ message, id }) => {
+        socket?.on("recive-message", async ({ message, id }: any) => {
             setMessages((prev) => [...prev, { id, text: message, type: "in_box" }]);
         });
 
         return () => {
-            socket.off("connect");
-            socket.off("connect_error");
+            socket?.off("connect");
+            socket?.off("connect_error");
         };
     }, []);
 
@@ -54,14 +52,14 @@ const Page = () => {
         console.log(messages);
     }, [messages.length]);
 
-    if (!selectedChat) return <p>Page</p>;
+    if (!selectedFriend) return <p>Page</p>;
     return (
         <section className="w-full h-full relative">
             <header className="w-full h-14 flex items-center justify-between p-2 border-b-[1px] border-gray-secondary bg-white">
                 <div className="flex items-start justify-center gap-5">
-                    <Image src={selectedChat.image} width={48} height={48} alt="profile-iamge" className="rounded-md" />
+                    <Image src={selectedFriend.image} width={48} height={48} alt="profile-iamge" className="rounded-md" />
                     <div className="flex flex-col items-start justify-center">
-                        <h4 className="font-semibold text-heading-4">{selectedChat.username}</h4>
+                        <h4 className="font-semibold text-heading-4">{selectedFriend.username}</h4>
                         <p className="text-gray text-caption">last seen recently</p>
                     </div>
                 </div>

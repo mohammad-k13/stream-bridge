@@ -66,10 +66,8 @@ const FriendRequestDialog = () => {
     const sendRequest = () => {
         startSendRequest(async () => {
             const body = { reciever_username: selectedUser };
-            const {
-                data: { message },
-            } = await axiosClient.post("/friend-request", body);
-            toast.success(message);
+             await axiosClient.post("/friend-request", body);
+            // toast.success(message);
             toggleFriendDialog();
         });
     };

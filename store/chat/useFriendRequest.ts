@@ -1,11 +1,12 @@
 import { axiosClient } from "@/lib/axios";
-import { IChat, IFriendRequest } from "@/types";
+import {  IFriendRequest } from "@/types";
 import { create } from "zustand";
 
 interface IUseFriendRequest {
     friendRequests: IFriendRequest[];
     newFriendRequest: IFriendRequest[];
     getFriendRequest: () => void;
+    addNewFriendRequest: (request: IFriendRequest) => void;
 }
 
 const useFriendRequest = create<IUseFriendRequest>((set, get) => ({
@@ -13,7 +14,10 @@ const useFriendRequest = create<IUseFriendRequest>((set, get) => ({
     newFriendRequest: [],
     getFriendRequest: async () => {
         const { data } = await axiosClient<IFriendRequest[]>("/all-friend-request");
-        set({ friendRequests: data, newFriendRequest: data.filter((request) => request.status === "pending") });
+        set({ friendRequests: data });
+    },
+    addNewFriendRequest: (newRequest) => {
+        set((state) => ({ friendRequests: [...state.friendRequests, newRequest] }));
     },
 }));
 

@@ -35,20 +35,30 @@ axiosClient.interceptors.response.use(
             if (error.response.status === 403) {
                 deleteCookie("sessionToken");
                 window.location.href = "/auth/login";
+                return;
             }
 
             if (error.response.status === 500) {
                 toast.error(message || "Internal Server Error");
+                return;
             }
 
             if (error.response.status === 404) {
                 toast.error(message || "Resource Not Found");
+                return;
+            }
+
+            if (error.response.status === 400) {
+                toast.error(message || "The request could not be processed.");
+                return;
             }
 
             console.error("Error:", error.response.status, error.response.data);
         } else if (error.request) {
             if (error.message === "Failed to fetch") {
-                toast.error("Network error: Unable to reach the server. Please check your connection.");
+                toast.error(
+                    "Network error: Unable to reach the server. Please check your connection."
+                );
             } else {
                 console.error("No response received", error.request);
                 toast.error("No response from the server. Please try again later.");
@@ -62,7 +72,7 @@ axiosClient.interceptors.response.use(
 
 // for server-side fetching
 export const axiosServer = axios.create({
-    baseURL: process.env.API_URL || "https://your-api.com",
+    baseURL: process.env.API,
     headers: {
         "Content-Type": "application/json",
     },
