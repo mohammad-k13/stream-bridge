@@ -6,7 +6,14 @@ import React, { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -49,6 +56,7 @@ const Register = () => {
             };
 
             setCookie("sessionToken", payload.sessionToken, cookiePayload);
+            setCookie("username", form.getValues("username"), cookiePayload); // this will use for back button in header of chat page
 
             push(`/chat/${form.getValues().username}`);
             form.reset();
@@ -58,7 +66,9 @@ const Register = () => {
     return (
         <article className="w-full p-5 rounded-md bg-white shadow-lg border-[1px] border-gray-secondary">
             <h2 className="font-bold text-heading-1 text-center">Welcome back!</h2>
-            <p className="text-body text-gray text-center mb-5">We are excited to see you again</p>
+            <p className="text-body text-gray text-center mb-5">
+                We are excited to see you again
+            </p>
             <div className="h-[1px] w-3/4 bg-gray opacity-25 rounded-md my-3 mx-auto"></div>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="text-body">
@@ -88,11 +98,17 @@ const Register = () => {
                             </FormItem>
                         )}
                     />
-                    <Button type="submit" className="mt-5 w-full flex items-center justify-center">
+                    <Button
+                        type="submit"
+                        className="mt-5 w-full flex items-center justify-center"
+                    >
                         {pending ? <Loader2 className="animate-spin" /> : "Login"}
                     </Button>
                     <Separator className="my-7 mt-10 bg-gray-secondary flex items-center justify-center">
-                        <Badge variant={"outline"} className="border-[1px] border-gray text-gray bg-background">
+                        <Badge
+                            variant={"outline"}
+                            className="border-[1px] border-gray text-gray bg-background"
+                        >
                             Links
                         </Badge>
                     </Separator>

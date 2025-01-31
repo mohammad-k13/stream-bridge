@@ -6,60 +6,57 @@ import Image from "next/image";
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { PhoneCall, Send, SkipBack, Smile } from "lucide-react";
-import { io } from "socket.io-client";
-import { getCookie } from "@/lib/cookies";
-import { IMessage } from "@/types";
-import { redirect } from "next/dist/server/api-utils";
-import { axiosClient } from "@/lib/axios";
-import clsx from "clsx";
 import Message from "@/components/chat/message";
 import { useSocket } from "@/store/socket";
+import useMessage from "@/store/chat/useMessage";
+import { useRouter } from "next/navigation";
+import { getCookie } from "@/lib/cookies";
 
 const Page = () => {
+    const { push } = useRouter();
     const { socket } = useSocket();
     const { selectedFriend } = useFriendsList();
-    const [messages, setMessages] = useState<IMessage[]>([]);
-    const [newMessage, setNewMessage] = useState<string>("");
+    const { sendMessage, messages, clearMessages, getAllMessages } = useMessage();
 
-    const sendMessage = () => {
-        socket?.emit(
-            "send-message",
-            { message: newMessage, recieverId: selectedFriend!._id },
-            (text: string, id: string) => {
-                const message: IMessage = { text, type: "out_box", id };
-                setMessages((pv) => [...pv, message]);
-                setNewMessage("");
-            }
-        );
-    };
-
-    const inputOnChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
-        setNewMessage(event.target.value);
-    };
+    const [newMessage, setNewMessage] = useState<string | null>(null);
 
     useEffect(() => {
-        socket?.on("recive-message", async ({ message, id }: any) => {
-            setMessages((prev) => [...prev, { id, text: message, type: "in_box" }]);
-        });
+        if (!selectedFriend) return;
+        getAllMessages(selectedFriend._id);
 
         return () => {
+            clearMessages();
             socket?.off("connect");
             socket?.off("connect_error");
         };
     }, []);
 
-    if (!selectedFriend)
-        return (
-            <section className="w-full h-screen flex items-center justify-center">
-                <h1 className="text-heading-1">Select A chat</h1>
-            </section>
-        );
+    const inputOnChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+        setNewMessage(event.target.value);
+    };
+
+    const sendMessageHandler = () => {
+        if (newMessage && selectedFriend) {
+            sendMessage(newMessage, selectedFriend._id);
+        }
+    };
+
+    const backRoute = () => {
+        const username = getCookie("username");
+        if (!username) {
+            push("/auth/login");
+            return;
+        }
+
+        push(`/chat/${username}`);
+    };
+
     return (
         <section className="w-full h-full relative">
             <header className="w-full h-14 flex items-center justify-between p-2 border-b-[1px] border-gray-secondary bg-white">
                 <div className="flex items-start justify-center gap-5">
                     <Image
-                        src={selectedFriend.image}
+                        src={selectedFriend?.image || ""}
                         width={48}
                         height={48}
                         alt="profile-iamge"
@@ -67,7 +64,7 @@ const Page = () => {
                     />
                     <div className="flex flex-col items-start justify-center">
                         <h4 className="font-semibold text-heading-4">
-                            {selectedFriend.username}
+                            {selectedFriend?.username}
                         </h4>
                         <p className="text-gray text-caption">last seen recently</p>
                     </div>
@@ -76,6 +73,12 @@ const Page = () => {
                     <Button className="bg-primary-overlay shadow-none text-primary flex items-center gap-2 px-3">
                         <PhoneCall />
                         Call
+                    </Button>
+                    <Button
+                        className="bg-primary-overlay shadow-none text-primary flex items-center gap-2 px-3"
+                        onClick={backRoute}
+                    >
+                        Back
                     </Button>
                 </div>
             </header>
@@ -92,10 +95,10 @@ const Page = () => {
                     <Input
                         placeholder="Type a message"
                         className="py-2 border-gray-secondary"
-                        value={newMessage}
+                        value={newMessage || ""}
                         onChange={inputOnChangeHandler}
                     />
-                    <Button size={"icon"} onClick={sendMessage}>
+                    <Button size={"icon"} disabled={!newMessage} onClick={sendMessageHandler}>
                         <Send />
                     </Button>
                 </form>
