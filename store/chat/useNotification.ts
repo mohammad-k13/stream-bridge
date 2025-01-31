@@ -24,7 +24,6 @@ const useNotification = create<IUseNotification>((set, get) => ({
 
         socket.emit("notification:getAll", (allNotification: any) => {
             //todo: show all notification in notification dialog
-            console.log("allNotification", allNotification);
         });
 
         socket.on("notification:received", async (data: IReceiveNotification) => {

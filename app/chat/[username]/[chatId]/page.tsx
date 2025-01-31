@@ -16,18 +16,22 @@ const Page = () => {
     const { push } = useRouter();
     const { socket } = useSocket();
     const { selectedFriend } = useFriendsList();
-    const { sendMessage, messages, clearMessages, getAllMessages } = useMessage();
+    const { sendMessage, messages, clearMessages, getAllMessages, subscribeToNewMessage } =
+        useMessage();
 
     const [newMessage, setNewMessage] = useState<string | null>(null);
 
     useEffect(() => {
-        if (!selectedFriend) return;
+        if (!selectedFriend) {
+            backRoute();
+            return;
+        }
+
         getAllMessages(selectedFriend._id);
+        subscribeToNewMessage();
 
         return () => {
             clearMessages();
-            socket?.off("connect");
-            socket?.off("connect_error");
         };
     }, []);
 
@@ -38,6 +42,7 @@ const Page = () => {
     const sendMessageHandler = () => {
         if (newMessage && selectedFriend) {
             sendMessage(newMessage, selectedFriend._id);
+            setNewMessage(null); // reset message input
         }
     };
 
@@ -82,7 +87,12 @@ const Page = () => {
                     </Button>
                 </div>
             </header>
-            <main className="h-full w-full p-2">
+            <main
+                className="w-full p-2 overflow-auto"
+                style={{
+                    height: "calc(100% - 3.5rem - 3.5rem)",
+                }}
+            >
                 {messages.map(({ text, type }, index) => (
                     <Message key={index} text={text} type={type} />
                 ))}
