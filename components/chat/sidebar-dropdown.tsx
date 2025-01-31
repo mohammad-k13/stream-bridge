@@ -31,7 +31,7 @@ const SidebarDropdown = () => {
     const { logout } = useAuth();
     const { socket } = useSocket();
 
-    const newFriendRequest = friendRequests.filter(request => !request.isRead)
+    const newFriendRequest = friendRequests.filter(request => request.status === 'pending')
 
     const openRequestListDialog = async () => {
         toggleShowLoading(); // showing loading ui unitl getting data

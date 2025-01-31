@@ -31,7 +31,6 @@ export interface IUser {
 export interface IFriendRequest {
     _id: string;
     status: "pending" | "accepted" | "rejected";
-    isRead: boolean,
     createdAt: Date,
     senderInfo: {
         username: string;

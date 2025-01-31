@@ -15,7 +15,7 @@ import useDialogs from "@/store/dialogs/useDialogs";
 import { IFriendRequest } from "@/types";
 import { Eye, Loader2 } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Badge } from "../ui/badge";
 
@@ -61,8 +61,17 @@ const RequestListDialog = () => {
         const {
             data: { message },
         } = await axiosClient.post("/answer-to-request", body);
+        if(newStatus === 'accepted') {
+            getFriends();
+        }
         toast.success(message);
     };
+
+    useEffect(() => {
+        if(showRequests) {
+            
+        }
+    }, [showRequests])
 
     return (
         <Dialog open={showRequests} onOpenChange={toggleShowRequest}>
