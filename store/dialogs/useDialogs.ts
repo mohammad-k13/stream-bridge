@@ -9,6 +9,9 @@ interface IUseDialogs {
 
     showNotifications: boolean;
     toggleShowNotification: () => void;
+
+    showLoading: boolean,
+    toggleShowLoading: () => void;
 }
 
 const useDialogs = create<IUseDialogs>((set, get) => ({
@@ -20,6 +23,9 @@ const useDialogs = create<IUseDialogs>((set, get) => ({
 
     showRequests: false,
     toggleShowRequest: () => set(({ showRequests }) => ({ showRequests: !showRequests })),
+
+    showLoading: false,
+    toggleShowLoading: () => set(({ showLoading }) => ({ showLoading: !showLoading })),
 }));
 
 export default useDialogs;

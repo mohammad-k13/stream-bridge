@@ -26,44 +26,19 @@ import { toast } from "sonner";
 import { useSocket } from "@/store/socket";
 
 const SidebarDropdown = () => {
-    const { friendRequests, addNewFriendRequest} = useFriendRequest();
-    const { toggleShowRequest, showRequests } = useDialogs();
+    const { friendRequests, addNewFriendRequest, getFriendRequest} = useFriendRequest();
+    const { toggleShowRequest, showRequests, toggleShowLoading} = useDialogs();
     const { logout } = useAuth();
     const { socket } = useSocket();
 
-    const newFriendRequest = friendRequests.filter(request => !request.isRead)
+    const newFriendRequest = friendRequests.filter(request => request.status === 'pending')
 
-    useEffect(() => {
-        if (socket) {
-            socket.emit("notification:getAll", (allNotification: any) => {
-                console.log("allNotification", allNotification);
-            });
-
-            socket.on("notification:received", (data: IReceiveNotification) => {
-                const {
-                    id,
-                    content,
-                    isRead,
-                    metaData: { image, username, createAt },
-                    type,
-                } = data;
-
-                const newReuqest: IFriendRequest = {
-                    _id: id,
-                    isRead: isRead,
-                    status: "pending",
-                    senderInfo: {
-                        image,
-                        username,
-                    },
-                    createdAt: createAt,
-                };
-                addNewFriendRequest(newReuqest);
-                toast.info(`${content} from ${username}`);
-            });
-        }
-    }, [showRequests]);
-
+    const openRequestListDialog = async () => {
+        toggleShowLoading(); // showing loading ui unitl getting data
+        getFriendRequest();
+        toggleShowLoading(); // close loading ui
+        toggleShowRequest(); // show request list dialog
+    }
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -87,7 +62,7 @@ const SidebarDropdown = () => {
                     </DropdownMenuItem>
                     <DropdownMenuItem
                         className="hover:bg-gray-secondary cursor-pointer transition-colors flex items-center justify-between"
-                        onClick={toggleShowRequest}
+                        onClick={openRequestListDialog}
                     >
                         Requests
                         {newFriendRequest.length > 0 && (

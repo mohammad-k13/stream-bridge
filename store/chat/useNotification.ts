@@ -2,12 +2,12 @@ import {
     IFriendRequest,
     IReceiveNotification,
     NotificationMetaData,
-    NotificationType,
 } from "@/types";
 import { create } from "zustand";
 import { useSocket } from "../socket";
 import { toast } from "sonner";
 import useFriendRequest from "./useFriendRequest";
+import useFriendsList from "./useFriendsList";
 
 export interface IUseNotification {
     notifications: IReceiveNotification[];
@@ -24,11 +24,9 @@ const useNotification = create<IUseNotification>((set, get) => ({
 
         socket.emit("notification:getAll", (allNotification: any) => {
             //todo: show all notification in notification dialog
-            console.log("allNotification", allNotification);
         });
 
-        socket.on("notification:received", (data: IReceiveNotification) => {
-            console.log("notification recived", data);
+        socket.on("notification:received", async (data: IReceiveNotification) => {
             const { id, content, isRead, metaData, type } = data;
 
             switch (type) {
@@ -43,7 +41,6 @@ const useNotification = create<IUseNotification>((set, get) => ({
                     const newNotification: IFriendRequest = {
                         _id: id,
                         createdAt,
-                        isRead,
                         senderInfo: { image, username: senderUsername },
                         status: "pending",
                     };
@@ -54,13 +51,16 @@ const useNotification = create<IUseNotification>((set, get) => ({
                     break;
                 case "friend_request_accepted":
                     // Handle friend request was accepted
-                    const { username: accepterUsername } = metaData as NotificationMetaData[typeof type];
+                    const { username: accepterUsername } =
+                        metaData as NotificationMetaData[typeof type];
 
                     toast.success(`${accepterUsername} accept your friend request`);
+                    useFriendsList.getState().getFriends();
                     break;
                 case "friend_request_rejected":
                     // Handle friend request was rejected
-                    const { username: rejecterUsername } = metaData as NotificationMetaData[typeof type];
+                    const { username: rejecterUsername } =
+                        metaData as NotificationMetaData[typeof type];
 
                     toast.error(`${rejecterUsername} reject your friend request`);
                     break;
