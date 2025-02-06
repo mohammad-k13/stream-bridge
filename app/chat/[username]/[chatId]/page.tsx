@@ -11,6 +11,7 @@ import { useSocket } from "@/store/socket";
 import useMessage from "@/store/chat/useMessage";
 import { useRouter } from "next/navigation";
 import { getCookie } from "@/lib/cookies";
+import MessageBoxSkeletone from "@/components/skeletons/message-box-skeletone";
 
 const Page = () => {
     const { push } = useRouter();
@@ -91,8 +92,9 @@ const Page = () => {
                     height: "calc(100% - 3.5rem - 3.5rem)",
                 }}
             >
-                {messages.map(({ text, type }, index) => (
-                    <Message key={index} text={text} type={type} />
+                {gettingMessageLoading && Array.from({length: 23}).map((_, index) => <MessageBoxSkeletone key={index} type={index % 2 == 0 ? "in_box" : "out_box"}/>)}
+                {messages.map(({ text, type, createdAt }, index) => (
+                    <Message key={index} text={text} type={type} createdAt={createdAt} />
                 ))}
             </main>
             <footer className="lg:w-2/3 w-full h-fit bg-white absolute z-30 left-1/2 -translate-x-1/2 bottom-0 rounded-lg">
