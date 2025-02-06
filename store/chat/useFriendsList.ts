@@ -6,19 +6,20 @@ import { useSocket } from "../socket";
 
 export interface IUseFriendsList {
     selectedFriend: IFriend | null;
-    setSelectedFriend: (friendinfo: IFriend) => void;
-
     friendsList: IFriend[];
     friendsListLoading: boolean;
+
+    setFriendsNewMessage: (id: string) => void;
+    setSelectedFriend: (friendinfo: IFriend) => void;
     getFriends: () => void;
     updateFriendsList: () => void;
 }
 
 const useFriendsList = create<IUseFriendsList>((set, get) => ({
     selectedFriend: null,
-    setSelectedFriend: (friendId) => set({ selectedFriend: friendId }),
 
     friendsList: [],
+    setSelectedFriend: (friendId) => set({ selectedFriend: friendId }),
     friendsListLoading: false,
     getFriends: async () => {
         set({ friendsListLoading: true });
@@ -28,12 +29,31 @@ const useFriendsList = create<IUseFriendsList>((set, get) => ({
     updateFriendsList: () => {
         const socket = useSocket.getState().socket;
 
-        if(socket) {
+        if (socket) {
             socket.on("new-friends", (newFriends: IFriend[]) => {
-                set({friendsList: newFriends})
-            })
+                set({ friendsList: newFriends });
+            });
         }
-    }
+    },
+
+    setFriendsNewMessage: (friendId: string) => {
+        const friendIndex = get().friendsList.findIndex(({ _id }) => _id === friendId);
+        if (friendIndex !== -1) {
+            set((state) => {
+                const updatedFriendsNewMessage = state.friendsList.map((friend, index) =>
+                    index === friendIndex
+                        ? {
+                              ...friend,
+                              hasNewMessage: true,
+                              newMessageCount: friend.newMessageCount + 1,
+                          }
+                        : friend
+                );
+
+                return { friendsList: updatedFriendsNewMessage };
+            });
+        }
+    },
 }));
 
 export default useFriendsList;

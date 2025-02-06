@@ -63,14 +63,7 @@ const useNotification = create<IUseNotification>((set, get) => ({
                         metaData as NotificationMetaData[typeof type];
 
                     toast.error(`${rejecterUsername} reject your friend request`);
-                    break;
-
-                case "message":
-                    // const MessageMetaData = metaData as IReceiveNotification<typeof type>;
-
-                    // Handle new message
-                    break;
-
+                     break;
                 case "mention":
                     // const MentionMetaData = metaData as IReceiveNotification<typeof type>;
 

@@ -10,6 +10,8 @@ export interface IFriend {
     username: string;
     image: string;
     _id: string;
+    hasNewMessage: boolean;
+    newMessageCount: number;
 }
 
 export interface Props {
