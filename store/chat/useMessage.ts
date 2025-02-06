@@ -42,8 +42,8 @@ const useMessage = create<IUseMessage>((set, get) => ({
                     recieverId,
                 },
                 //this callback fire when message has been created in db successfully
-                (text: string, id: string) => {
-                    const outBoxMessage: IMessage = { text, type: "out_box", id };
+                (text: string, id: string, createdAt: string) => {
+                    const outBoxMessage: IMessage = { text, type: "out_box", id, createdAt};
                     set(({ messages }) => ({
                         messages: [...messages, outBoxMessage],
                         sendingMessageLoading: false,
@@ -62,15 +62,17 @@ const useMessage = create<IUseMessage>((set, get) => ({
                     message,
                     id,
                     senderId,
+                    createdAt
                 }: {
                     message: string;
                     id: string;
                     senderId: string;
+                    createdAt: string
                 }) => {
                     const currentChatSelectedId = useFriendsList.getState().selectedFriend;
 
                     if (String(currentChatSelectedId?._id) === String(senderId)) {
-                        const newMessage: IMessage = { text: message, id, type: "in_box" };
+                        const newMessage: IMessage = { text: message, id, type: "in_box", createdAt };
                         set(({ messages }) => ({ messages: [...messages, newMessage] }));
                     } else {
                         useFriendsList.getState().setFriendsNewMessage(senderId)
