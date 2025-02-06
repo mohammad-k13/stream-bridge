@@ -1,8 +1,9 @@
-import { IMessage } from "@/types";
+import { IMessage, NotificationContent } from "@/types";
 import { create } from "zustand";
 import { useSocket } from "../socket";
 import { toast } from "sonner";
 import { axiosClient } from "@/lib/axios";
+import useFriendsList from "./useFriendsList";
 
 interface IUseMessage {
     messages: IMessage[];
@@ -22,11 +23,12 @@ const useMessage = create<IUseMessage>((set, get) => ({
     sendingMessageLoading: false,
 
     getAllMessages: async (selectedFriendId) => {
+        set({gettingMessageLoading: true})
         const { data: allMessages } = await axiosClient<IMessage[]>("/chat-messages", {
             params: { friendId: selectedFriendId },
         });
 
-        set({ messages: allMessages });
+        set({ messages: allMessages, gettingMessageLoading: false });
     },
     sendMessage: (message, recieverId) => {
         set({ sendingMessageLoading: true });
@@ -54,10 +56,28 @@ const useMessage = create<IUseMessage>((set, get) => ({
         const socket = useSocket.getState().socket;
 
         if (socket) {
-            socket.on("recive-message", ({ message, id }: { message: string; id: string }) => {
-                const newMessage: IMessage = { text: message, id, type: "in_box" };
-                set(({ messages }) => ({ messages: [...messages, newMessage] }));
-            });
+            socket.on(
+                "recive-message",
+                ({
+                    message,
+                    id,
+                    senderId,
+                }: {
+                    message: string;
+                    id: string;
+                    senderId: string;
+                }) => {
+                    const currentChatSelectedId = useFriendsList.getState().selectedFriend;
+
+                    if (String(currentChatSelectedId?._id) === String(senderId)) {
+                        const newMessage: IMessage = { text: message, id, type: "in_box" };
+                        set(({ messages }) => ({ messages: [...messages, newMessage] }));
+                    } else {
+                        useFriendsList.getState().setFriendsNewMessage(senderId)
+                        toast.info(NotificationContent["message"]);
+                    }
+                }
+            );
         }
     },
     saveMessagesInIndexedDb: () => {},

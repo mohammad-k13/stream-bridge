@@ -16,7 +16,7 @@ const Page = () => {
     const { push } = useRouter();
     const { socket } = useSocket();
     const { selectedFriend } = useFriendsList();
-    const { sendMessage, messages, clearMessages, getAllMessages, subscribeToNewMessage } =
+    const { sendMessage, messages, clearMessages, getAllMessages, gettingMessageLoading } =
         useMessage();
 
     const [newMessage, setNewMessage] = useState<string | null>(null);
@@ -28,8 +28,6 @@ const Page = () => {
         }
 
         getAllMessages(selectedFriend._id);
-        subscribeToNewMessage();
-
         return () => {
             clearMessages();
         };
@@ -42,7 +40,7 @@ const Page = () => {
     const sendMessageHandler = () => {
         if (newMessage && selectedFriend) {
             sendMessage(newMessage, selectedFriend._id);
-            setNewMessage(null); // reset message input
+            setNewMessage(null);
         }
     };
 

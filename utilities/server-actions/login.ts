@@ -20,7 +20,6 @@ export default async function LoginAction(values: z.infer<typeof loginFormSchema
         });
         const { message, sessionToken, expires } = await response.json();
 
-        console.log(response)
         if (!response.ok) {
             return { isError: true, message };
         }

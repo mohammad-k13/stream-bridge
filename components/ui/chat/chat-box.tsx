@@ -15,13 +15,13 @@ interface Props extends IFriend {
     timestamp?: string;
 }
 
-const ChatBox = ({ _id, image, username, timestamp = "12m" }: Props) => {
+const ChatBox = ({ _id, image, username, hasNewMessage, newMessageCount, timestamp = "12m" }: Props) => {
     const { selectedFriend, setSelectedFriend } = useFriendsList();
     const isselectedFriend = selectedFriend?.username === username;
     const pathname = usePathname().split("/")[2];
 
     const handleClick = () => {
-        const chat = { _id, image, username };
+        const chat: IFriend = { _id, image, username, hasNewMessage: false, newMessageCount: 0 };
         setSelectedFriend(chat);
         redirect(`/chat/${pathname}/${_id}`);
     };
@@ -44,12 +44,14 @@ const ChatBox = ({ _id, image, username, timestamp = "12m" }: Props) => {
                         className="object-cover rounded-md"
                     />
                 </header>
-                <main className="w-full flex flex-col items-start">
+                <main className="w-full flex flex-col items-start relative">
                     <div className="w-full flex items-center justify-between">
                         <h5 className="font-semibold text-body">{username}</h5>
                         <p className="font-semibold text-caption text-gray">{timestamp}</p>
                     </div>
                     <p className="text-gray text-caption">{"what's up"}</p>
+
+                    <div className="absolute top-1/2 -translate-y-1/2 left-0 bg-red size-3 rounded-full"></div>
                 </main>
             </ContextMenuTrigger>
             <ContextMenuContent className="bg-white p-2 rounded-md flex flex-col gap-2">

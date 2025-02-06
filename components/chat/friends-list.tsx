@@ -74,8 +74,8 @@ const FriendsList = () => {
                         <ChatboSkeletone key={index} />
                     ))}
                 {!friendsListLoading &&
-                    friendsList.map(({ _id, image, username }, index) => (
-                        <ChatBox key={_id} _id={_id} image={image} username={username} />
+                    friendsList.map(({ _id, image, username, hasNewMessage, newMessageCount }, index) => (
+                        <ChatBox key={_id} _id={_id} image={image} hasNewMessage={hasNewMessage} newMessageCount={newMessageCount} username={username} />
                     ))}
             </div>
         </>

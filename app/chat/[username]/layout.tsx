@@ -5,14 +5,17 @@ import { type Props } from "@/types";
 import FriendsList from "@/components/chat/friends-list";
 import {useSocket} from "@/store/socket";
 import useNotification from "@/store/chat/useNotification";
+import useMessage from "@/store/chat/useMessage";
 
 const ChatLayout = ({ children }: Props) => {
     const { connectToSocket, disconnectSocket } = useSocket();
     const { subscribeToNotifications } = useNotification();
+    const {subscribeToNewMessage} = useMessage();
 
     useEffect(() => {
         connectToSocket();
         subscribeToNotifications();
+        subscribeToNewMessage();
 
         return () => {
             disconnectSocket();
